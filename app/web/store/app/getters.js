@@ -1,7 +1,7 @@
 'use strict';
 
 
-const getters = {
+const getters = function(){
 
 };
 

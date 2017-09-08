@@ -1,0 +1,18 @@
+<template>
+  <div class="ele-content">
+    <ele-dashboard-breadcrumb></ele-dashboard-breadcrumb>
+    <div class="ele-panel">
+      <h1>demo222!</h1>
+    </div>
+  </div>
+</template>
+
+<script>
+  import DashboardBreadcrumb from '@/component/dashboard/dashboard-breadcrumb'
+
+  export default {
+    components: {
+      'ele-dashboard-breadcrumb': DashboardBreadcrumb
+    }
+  }
+</script>
