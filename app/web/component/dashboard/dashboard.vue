@@ -80,22 +80,22 @@
     props: ['navMap'],
     methods: {
       handleTopNavSelect (index) {
-//        switch (index) {
-//          case 'user-menu-logout': {
-//            this.$store.dispatch('authentication/clearAccessToken')
-//            this.$router.push({name: 'login'})
-//            break
-//          }
-//          default:
-//            if (this.navMap[index] !== undefined) {
-//              this.$router.push(this.navMap[index].location)
-//            }
-//        }
+        switch (index) {
+          case 'user-menu-logout': {
+            this.$store.dispatch('authentication/clearAccessToken')
+            this.$router.push({name: 'login'})
+            break
+          }
+          default:
+            if (this.navMap[index] !== undefined) {
+              this.$router.push(this.navMap[index].location)
+            }
+        }
       }
     },
     computed: {
       topNavActive () {
-        //return this.$store.getters['dashboard/topNavActive']
+        return this.$store.getters['dashboard/topNavActive']
       }
     }
   }

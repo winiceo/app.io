@@ -6,7 +6,7 @@ import App from 'app';
 import Layout from 'component/layout/app';
 
 import ElementUI from 'element-ui';
-import 'normalize.css';
+//import 'normalize.css';
 
 import navMap from '@/config/navMap'
 

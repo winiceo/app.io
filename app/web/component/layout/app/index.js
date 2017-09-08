@@ -1,4 +1,4 @@
-import MainLayout from './dashboard.vue';
+import MainLayout from './main.vue';
 
 const tpl = '<div id="app"><MainLayout><div slot="main"><slot></slot></div></MainLayout></div>';
 

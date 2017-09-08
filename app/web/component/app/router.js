@@ -19,7 +19,8 @@ import SettingsDemo2 from '@/page/settings/demo2'
 Vue.use(Router)
 
 export default new Router({
-    // mode: 'history',
+     mode: 'history',
+    base:'/app',
     routes: [
         {
             path: '/',
