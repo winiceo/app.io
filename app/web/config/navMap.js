@@ -1,23 +1,23 @@
 export default [
   {
-    text: '主导航 1',
+    text: '营销活动',
     icon: 'el-icon-star-on',
-    location: {name: 'home-welcome'},
+    location: {name: 'activity-dzp'},
     children: [
       {
-        text: '导航 1-1',
+        text: '幸运大转盘',
         icon: 'el-icon-picture',
-        location: {name: 'home-welcome'}
+        location: {name: 'activity-dzp'}
       },
       {
-        text: '导航 1-2',
+        text: '砸金蛋',
         icon: 'el-icon-time',
-        location: {name: 'home-demo'}
+        location: {name: 'activity-zjd'}
       }
     ]
   },
   {
-    text: '主导航 2',
+    text: '个人中心',
     icon: 'el-icon-star-on',
     location: {name: 'settings-demo'},
     children: [
@@ -32,10 +32,5 @@ export default [
         location: {name: 'settings-demo2'}
       }
     ]
-  },
-  {
-    text: '主导航 3',
-    icon: 'el-icon-star-off',
-    location: {name: ''}
   }
 ]

@@ -11,16 +11,94 @@ module.exports = app => {
             super(ctx);
             this.app = ctx.app;
             this.__ = this.ctx.__.bind(this.ctx);
-
-
         }
 
         * login() {
             const {ctx, service} = this;
+            const body = ctx.request.body;
+
+            let Account = Parse.Object.extend("account");
+
+            let ret = {
+                code: 200,
+                message: ''
+            }
+
+            //{"username":"15810042722","password":"123456","agreement":"true","bar_name":"asdfasdf","token":"a53bf09a1ea0aafa2b9e78b4a76f0d77","sms_code":"4234"}
+            var query = new Parse.Query("account");
+            query.equalTo("username", body.username);
+            query.equalTo("password", body.password);
+
+
+          yield  query.first().then(function (account) {
+
+                if (account) {
+                    ctx.session.accountId = account.id
+                    ret.message = "登录成功"
+                    account.token='44444';
+                    ctx.session.uid = account.id
+                    ret.data=account;
+
+
+
+                } else {
+                    ret.code = 10001
+                    ret.message = "登录失败，请检查手机号或者密码是否正确"
+
+                }
+
+            },function (e) {
+                ret.code = 10000
+                ret.message = e
+
+            })
+            ctx.body=ret;
+
+        }
+
+        * logout() {
+            const {ctx, service} = this;
 
             const ret = {
-                "status": 200,
+                "code": 200,
+                "message": '',
                 "data": {
+                    'role': 'admin',
+                    "token": '333',
+                    "userinfo": {
+                        "id": 755,
+                        "pid": 78,
+                        "username": "test",
+                        "email": "",
+                        "sex": "3",
+                        "status": 1,
+                        "create_time": "2017-05-08 08:40:48",
+                        "birthday": "1992-11-05",
+                        "address": "",
+                        "token": "82676b532d8d593aaadd2f066c8d49d4",
+                        "access_status": 2,
+                        "web_routers": "",
+                        "api_routers": "",
+                        "default_web_routers": "",
+                        "is_update_pass": 1
+                    }
+                }
+            }
+
+
+            ctx.body = ret;
+        }
+
+        * userinfo() {
+            const {ctx, service} = this;
+
+            const ret = {
+                "code": 200,
+                "message": '',
+                "data": {
+                    'role': 'admin',
+                    "token": '333',
+                    "name": 'leven',
                     "userinfo": {
                         "id": 755,
                         "pid": 78,
@@ -51,183 +129,44 @@ module.exports = app => {
             const {ctx, service} = this;
             const body = ctx.request.body;
 
-
-
-            const isLogin = yield service.user.register(body)
-
-            if (isLogin !== true) {
-                return;
-            }
-
-            const options = yield {
-                userInfo: service.user.info(ctx.session.user_id),
-                moneyTotal: app.redis.hget('money', ctx.session.user_id),
-                setting: yield service.system.getSetting(),
-                config: yield service.wechat.getWechatConfig(callbackUrl)
-            };
-
-            options.share = {
-                "title": options.setting.web_name,
-                "imgUrl": app.config.shareimg,
-                "desc": "赚钱不容易，省着点花哟",
-                "link": callbackUrl
-            };
-
-            const userQuery = new Parse.Query('wechat_user');
-            userQuery.equalTo('objectId', ctx.session.user_id);
-            yield userQuery.first().then(function (user) {
-                if (user) {
-                    options.moneyTotal = user.get('money');
-                }
-            });
-
-            console.log(options.moneyTotal);
-
-
-            yield ctx.render('wechat/myredpack.html', options);
-
-        }
-
-        * moneyList() {
-            const {ctx, service} = this;
-            const page = ctx.query.num || 1
             const ret = {
-                code: 1,
-                data: [],
-            };
-
-            const moneys = yield ctx.service.money.getList(ctx.session.user_id, page - 1);
-            // console.log(moneys);
-            _.each(moneys, function (n) {
-                const data = {
-                    primary_money: n.get('money') / 100,
-                    type: n.get('title'),
-                    create_time: ctx.helper.dateAt(n.createdAt),
-                    bar_name: n.get('bar_name') || "",
-                    style: 'color:rgb(255,136,71)',
-                };
-                ret.data.push(data);
-            });
-            if (moneys.length == 0) {
-                ret.code = 0
-            }
-            ctx.body = ret;
-        }
-
-        * withdraw() {
-            const {ctx, service} = this;
-
-            const callbackUrl = app.config.appURL + '/wechat/money/withdraw';
-            const isLogin = yield service.user.checkAuth({url: callbackUrl})
-
-            if (isLogin !== true) {
-                return;
+                code: 200
             }
 
-            const isCanDo = yield app.redis.hget(`draws`, `${ctx.session.user_id}-${moment().format('YYYYMMDD')}_times`);
-            if (isCanDo == 1) {
-                const retOptions = {}
-                retOptions.code = 1;
-                retOptions.message = '每天只能提现一次！';
-                return yield ctx.render('wechat/success.html', {options: retOptions});
+            let query = new Parse.Query("account");
+            query.equalTo("username", body.username);
+            yield query.first().then(function (account) {
 
+                if (!account) {
+                    let Account = Parse.Object.extend("account");
 
-            }
+                    account = new Account();
+                    account.set("username", body.username)
+                    account.set("password", body.password)
+                    account.set("role", "guest")
 
-
-            const options = {
-                setting: yield service.system.getSetting(),
-                config: yield service.wechat.getWechatConfig(callbackUrl)
-
-
-            };
-
-            const userQuery = new Parse.Query('wechat_user');
-            userQuery.equalTo('objectId', ctx.session.user_id);
-            yield userQuery.first().then(function (user) {
-                if (user) {
-                    options.user = user;
-                }
-            });
-
-            options.share = {
-                "title": options.setting.web_name,
-                "imgUrl": app.config.shareimg,
-                "desc": "",
-                "link": callbackUrl
-            };
-
-
-            yield ctx.render('wechat/withdraw.html', options);
-        }
-
-        * withdrawsave() {
-            const {ctx, service} = this;
-            const body = ctx.request.body;
-            const money = (body.amount);
-            const that = this;
-            const ret = {
-                error: 0,
-                amount: money,
-                message: '提现成功',
-            };
-
-            const bill = {
-                type: 3,
-                money: body.amount,
-                user_id: ctx.session.user_id
-            }
-            const isCanDo = yield app.redis.hget(`draws`, `${ctx.session.user_id}-${moment().format('YYYYMMDD')}_times`);
-            if (isCanDo == 1) {
-                ret.message = '提现失败,每天只能提现一次';
-                ret.amount = 0;
-
-            } else {
-                yield app.redis.hincrby(`draws`, `${ctx.session.user_id}-${moment().format('YYYYMMDD')}_times`, 1);
-
-
-                let result = yield service.money.createBill(bill)
-                if (!result) {
-                    ret.message = '提现失败';
-                    ret.amount = 0;
+                    return account.save()
                 } else {
-                    ret.amount = money;
+                    return Parse.Promise.error("此手机号已注册");
+
                 }
-            }
-
-            return ctx.body = ret;
-
-        }
+            }).then(function (account) {
 
 
-        /**
-         * 管理员禁言用户消息
-         */
-        * black() {
+                ctx.session.uid = account.id
+                ret.message = "注册成功"
 
-            const {ctx, service} = this;
-            const body = ctx.request.body;
-            const id = ctx.params.id;
-            const uid = body.uid;
-            const time = parseInt(body.time);
 
-            const adminInfo = yield service.admin.adminInfo(id, ctx.session.user_id);
-            if (adminInfo) {
-                let ret;
-                if (time > 0) {
-                    ret = yield app.redis.setex(`black:${id}:${uid}`, time, 1);
-                } else if (time == 0) {
-                    console.log('del');
-                    ret = yield app.redis.del(`black:${id}:${uid}`);
+            }, function (error) {
 
-                } else if (time == -1) {
-                    ret = yield service.message.removeByUid(id, uid);
-                }
+                ret.error = 50001;
+                ret.message = error
 
-                return ctx.body = {code: 1, data: '操作成功'};
-            }
-            return ctx.body = {code: 1, data: '无权操作'};
+            }).then(function () {
+                "use strict";
 
+            })
+            ctx.body = ret;
         }
 
 

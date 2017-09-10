@@ -27,3 +27,9 @@ exports.nunjucks = {
     enable: true,
     package: 'egg-view-nunjucks',
 };
+
+exports.security = {
+    csrf: {
+        enable: false,
+    },
+};

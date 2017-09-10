@@ -1,6 +1,6 @@
 import { sync } from 'vuex-router-sync';
-import store from 'store/admin';
-import router from 'component/app/router';
+import store from 'store/cms';
+import router from '@/router/app';
 import app from './app.vue';
 import App from 'app';
 import Layout from 'component/layout/app';
@@ -17,31 +17,25 @@ import '@/asset/style/ext/ext.scss';
 App.use(ElementUI);
 
 App.component(Layout.name, Layout);
-
-
+import '@/icons' // icon
+import './errorLog'// error log
+import './permission' // 权限
 //App.config.productionTip = false
-
+import { getToken } from '@/utils/auth' // 验权
 router.beforeEach((to, from, next) => {
     // authentication
-    if (to.name !== 'login' && store.getters['authentication/accessToken'] === '') {
-        next({name: 'login'})
-        return
-    }
-    if (to.name === 'login' && store.getters['authentication/accessToken'] !== '') {
-        next(false)
-        return
-    }
+    //获取store里面的token
 
     // track nav active
     for (let i = 0; i < navMap.length; i++) {
         if (to.name === navMap[i].location.name) {
-            store.dispatch('dashboard/topNavActive', i.toString())
-            store.dispatch('dashboard/sidebarNavActive', '0')
+             store.dispatch('dashboard/topNavActive', i.toString())
+             store.dispatch('dashboard/sidebarNavActive', '0')
             break
         }
         for (let j = 0; navMap[i].children && j < navMap[i].children.length; j++) {
             if (to.name === navMap[i].children[j].location.name) {
-                store.dispatch('dashboard/topNavActive', i.toString())
+               store.dispatch('dashboard/topNavActive', i.toString())
                 store.dispatch('dashboard/sidebarNavActive', j.toString())
                 break
             }

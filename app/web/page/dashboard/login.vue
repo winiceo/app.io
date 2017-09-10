@@ -1,96 +1,208 @@
 <template>
-  <div class="full-screen">
-    <div class="center-window">
-      <el-row type="flex" justify="center">
-        <el-col :xs="20" :sm="18" :md="12" :lg="8">
-          <div class="ele-panel">
-            <h1>DASHBOARD</h1>
-            <el-form :model="loginForm" :rules="loginFormRules" ref="loginForm">
-              <el-form-item label="帐号" prop="username">
-                <el-input type="text" v-model="loginForm.username"></el-input>
-              </el-form-item>
-              <el-form-item label="密码" prop="password">
-                <el-input type="password" v-model="loginForm.password"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox v-model="loginForm.remember">在这台电脑记住我</el-checkbox>
-              </el-form-item>
-              <el-form-item style="margin-bottom: 0">
-                <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
-                <el-button @click="resetForm('loginForm')">重置</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-col>
-      </el-row>
+    <div class="login-container">
+        <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm"
+                 label-position="left">
+            <h3 class="title">系统登录</h3>
+
+            <el-form-item prop="username">
+        <span class="svg-container svg-container_login">
+          <icon-svg icon-class="yonghuming"/>
+        </span>
+                <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="邮箱"/>
+            </el-form-item>
+
+            <el-form-item prop="password">
+        <span class="svg-container">
+          <icon-svg icon-class="mima"/>
+        </span>
+                <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password"
+                          autoComplete="on"
+                          placeholder="密码"/>
+                <span class='show-pwd' @click='showPwd'><icon-svg icon-class="yanjing"/></span>
+            </el-form-item>
+
+            <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading"
+                       @click.native.prevent="handleLogin">登录
+            </el-button>
+
+        </el-form>
+
+        <el-dialog title="第三方验证" :visible.sync="showDialog">
+            本地不能模拟，请结合自己业务进行模拟！！！<br/><br/><br/>
+            邮箱登录成功,请选择第三方验证<br/>
+            <social-sign/>
+        </el-dialog>
+
     </div>
-  </div>
 </template>
 
-<style lang="scss" scoped>
-  .full-screen {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .center-window {
-      flex-grow: 1;
-    }
-  }
-</style>
-
 <script>
-  export default {
-    data () {
-      let validateUsername = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入用户名'))
-        } else {
-          callback()
-        }
-      }
+    import {isvalidUsername} from '@/utils/validate'
 
-      let validatePassword = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'))
-        } else {
-          callback()
-        }
-      }
-      return {
-        loginForm: {
-          username: '',
-          password: '',
-          remember: false
+
+    export default {
+        components: {},
+        name: 'login',
+        data() {
+            const validateUsername = (rule, value, callback) => {
+                if (!isvalidUsername(value)) {
+                    callback(new Error('请输入正确的用户名'))
+                } else {
+                    callback()
+                }
+            }
+            const validatePassword = (rule, value, callback) => {
+                if (value.length < 6) {
+                    callback(new Error('密码不能小于6位'))
+                } else {
+                    callback()
+                }
+            }
+            return {
+                loginForm: {
+                    username: 'admin',
+                    password: '123456'
+                },
+                loginRules: {
+                    username: [{required: true, trigger: 'blur', validator: validateUsername}],
+                    password: [{required: true, trigger: 'blur', validator: validatePassword}]
+                },
+                pwdType: 'password',
+                loading: false,
+                showDialog: false
+            }
         },
-        loginFormRules: {
-          username: [{validator: validateUsername, trigger: 'blur'}],
-          password: [{validator: validatePassword, trigger: 'blur'}]
+        methods: {
+            showPwd() {
+                if (this.pwdType === 'password') {
+                    this.pwdType = ''
+                } else {
+                    this.pwdType = 'password'
+                }
+            },
+            handleLogin() {
+                this.$refs.loginForm.validate(valid => {
+                    if (valid) {
+                        this.loading = true
+                        this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+                            this.loading = false
+                            this.$router.push({path: '/'})
+                            // this.showDialog = true
+                        }).catch(() => {
+                            this.loading = false
+                        })
+                    } else {
+                        console.log('error submit!!')
+                        return false
+                    }
+                })
+            },
+            afterQRScan() {
+                // const hash = window.location.hash.slice(1)
+                // const hashObj = getQueryObject(hash)
+                // const originUrl = window.location.origin
+                // history.replaceState({}, '', originUrl)
+                // const codeMap = {
+                //   wechat: 'code',
+                //   tencent: 'code'
+                // }
+                // const codeName = hashObj[codeMap[this.auth_type]]
+                // if (!codeName) {
+                //   alert('第三方登录失败')
+                // } else {
+                //   this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
+                //     this.$router.push({ path: '/' })
+                //   })
+                // }
+            }
+        },
+        created() {
+            // window.addEventListener('hashchange', this.afterQRScan)
+        },
+        destroyed() {
+            // window.removeEventListener('hashchange', this.afterQRScan)
         }
-      }
-    },
-    mounted () {
-      this.loginForm.username = 'admin'
-      this.loginForm.password = '123456'
-    },
-    methods: {
-      submitForm (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.$store.dispatch('authentication/accessToken', {value: '123', remember: this.loginForm.remember})
-            this.$router.push({name: 'home-welcome'})
-          } else {
-            return false
-          }
-        })
-      },
-      resetForm (formName) {
-        this.$refs[formName].resetFields()
-      }
     }
-  }
 </script>
+
+<style rel="stylesheet/scss" lang="scss"  >
+    @import "~@/asset/style/mixin.scss";
+
+    $bg: #2d3a4b;
+    $dark_gray: #889aa4;
+    $light_gray: #eee;
+
+    .login-container {
+        @include relative;
+        height: 100vh;
+        background-color: $bg;
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
+            -webkit-text-fill-color: #fff !important;
+        }
+        input {
+            background: transparent;
+            border: 0px;
+            -webkit-appearance: none;
+            border-radius: 0px;
+            padding: 12px 5px 12px 15px;
+            color: $light_gray;
+            height: 47px;
+        }
+        .el-input {
+            display: inline-block;
+            height: 47px;
+            width: 85%;
+        }
+        .tips {
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .svg-container {
+            padding: 6px 5px 6px 15px;
+            color: $dark_gray;
+            vertical-align: middle;
+            width: 30px;
+            display: inline-block;
+            &_login {
+                font-size: 20px;
+            }
+        }
+        .title {
+            font-size: 26px;
+            font-weight: 400;
+            color: $light_gray;
+            margin: 0px auto 40px auto;
+            text-align: center;
+            font-weight: bold;
+        }
+        .login-form {
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: 400px;
+            padding: 35px 35px 15px 35px;
+            margin: 120px auto;
+        }
+        .el-form-item {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            color: #454545;
+        }
+        .show-pwd {
+            position: absolute;
+            right: 10px;
+            top: 7px;
+            font-size: 16px;
+            color: $dark_gray;
+            cursor: pointer;
+        }
+        .thirdparty-button {
+            position: absolute;
+            right: 35px;
+            bottom: 28px;
+        }
+    }
+</style>

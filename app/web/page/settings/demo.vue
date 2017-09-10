@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import DashboardBreadcrumb from '@/component/dashboard/dashboard-breadcrumb'
+  import DashboardBreadcrumb from '@/page/dashboard/component/dashboard-breadcrumb'
 
   export default {
     components: {

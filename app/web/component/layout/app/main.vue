@@ -2,7 +2,7 @@
    <div>
 
      <LayoutContent>
-       <div slot="content"><slot name="main"></slot></div>
+       <div slot="content">jhgjhgjh<slot name="main"></slot></div>
      </LayoutContent>
 
    </div>

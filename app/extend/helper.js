@@ -21,10 +21,8 @@ module.exports = {
     },
     dateAt(date, format) {
         date = moment(date, moment.ISO_8601)
-        if (format == 1) {
-            return date.fromNow();
-        }
-        format = format || 'MM/DD HH:mm';
+
+        format = format || 'YYYY/MM/DD HH:mm';
         return date.format(format);
 
     },
@@ -34,7 +32,7 @@ module.exports = {
         if (format == 2) {
             return date.fromNow();
         }
-        format = 'MM/DD HH:mm';
+        format = 'YYYY/MM/DD';
         return date.format(format);
 
     },

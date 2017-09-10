@@ -1,6 +1,7 @@
 <template>
   <Layout description="vue server side render" keywords="egg, vue, webpack, server side render">
     <div class="container smart-container">
+      adfasdf
       <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-9">
           <ul class="smart-artiles" id="articleList">
@@ -46,6 +47,7 @@
     },
     data(){
       return {
+          dialogFormFenLeiVisible:false,
         isFinish: false,
         isLoading : false,
         pageIndex: 1,

@@ -1,7 +1,8 @@
 const Model = require('../../mocks/article/list');
 
 exports.index = function* (ctx) {
-  yield ctx.render('index/index.js', Model.getPage(1, 10));
+   ctx.body={success:ctx.session};
+   //yield ctx.render('index/index.js', Model.getPage(1, 10));
 };
 
 exports.client = function* (ctx) {

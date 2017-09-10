@@ -8,6 +8,14 @@
             title="el-table有bug, 服务器渲染出来数据是空的,用简单的模板结果是可以出来"
             type="info">
     </el-alert>
+
+    <el-button type="text" @click.native="dialogFormFenLeiVisible = true" style="margin: 0;padding: 0;">设置</el-button>
+
+    <el-dialog title="设置活动分类" v-model="dialogFormFenLeiVisible" >
+
+        <span slot="footer" class="dialog-footer">
+         </span>
+    </el-dialog>
     <p></p>
     <el-table :data="list " border style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column
@@ -50,6 +58,7 @@
     components: {},
     data(){
       return {
+          dialogFormFenLeiVisible:false,
         pageIndex: 1,
         pageSize: 10
       }

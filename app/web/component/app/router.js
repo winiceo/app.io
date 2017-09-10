@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 import navMap from '@/config/navMap'
 
-import DashboardContent from '@/component/dashboard/dashboard-content'
+import DashboardContent from '@/page/dashboard/component/dashboard/dashboard-content'
 
 import Dashboard from '@/page/dashboard/dashboard'
 import Login from '@/page/dashboard/login'
@@ -19,7 +19,7 @@ import SettingsDemo2 from '@/page/settings/demo2'
 Vue.use(Router)
 
 export default new Router({
-     mode: 'history',
+    mode: 'history',
     base:'/app',
     routes: [
         {
