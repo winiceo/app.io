@@ -1,46 +1,116 @@
-const path = require('path');
+'use strict';
 const fs = require('fs');
-module.exports = app => {
-  const exports = {};
+const path = require('path');
+const deepmerge = require('deepmerge');
+module.exports = appInfo => {
 
-  exports.siteFile = {
-    '/favicon.ico': fs.readFileSync(path.join(app.baseDir, 'app/web/asset/images/favicon.ico'))
-  };
 
-  exports.view = {
-    cache: false
-  };
+    const root = [
+        path.join(appInfo.baseDir, 'app/view'),
+        // path.join(appInfo.baseDir, 'app/view2'),
+    ];
+    const config = {
+        keys: '71an',
+        development: {
+            watchDirs: ['app', 'config', 'conf', 'index.js'],
+        },
+        siteFile: {
+            '/favicon.ico': fs.readFileSync(path.join(appInfo.baseDir, 'app/web/asset/images/favicon.ico'))
 
-  exports.vuessr = {
-    layout: path.join(app.baseDir, 'app/web/view/layout.html'),
-    injectRes: [
-      // {
-      //  inline: true,
-      //  url: path.join(app.baseDir, 'app/web/framework/inject/inline.js')
-      // },
-      // {
-      //  inline: true,
-      //  manifest: true,
-      //  url: 'pack/inline.js'
-      // }
-    ]
-  };
+        },
+        static: {
+            prefix: '/public',
 
-  exports.logger = {
-    consoleLevel: 'DEBUG',
-    dir: path.join(app.baseDir, 'logs')
-  };
+            dir: [path.join(appInfo.baseDir, 'addons/'),path.join(appInfo.baseDir, 'public/')]
+        },
+        vuessr: {
+            layout: path.join(appInfo.baseDir, 'app/web/view/layout.html'),
+            injectRes: [
+                // {
+                //  inline: true,
+                //  url: path.join(app.baseDir, 'app/web/framework/inject/inline.js')
+                // },
+                // {
+                //  inline: true,
+                //  manifest: true,
+                //  url: 'pack/inline.js'
+                // }
+            ]
+        },
+        security: {
+            csrf: {
+                enable: false,
+            },
+        },
+        view: {
+            root: [
+                path.join(appInfo.baseDir, 'app/view'),
+                path.join(appInfo.baseDir, 'addons'),
+            ].join(','),
+            ext: 'html',
+            cache: false,
+            defaultExt: '.html',
+            mapping: {
+                '.ejs': 'ejs',
+                '.nj': 'nunjucks',
+                '.html': 'nunjucks',
+            },
+        },
+        logrotator: {
+            filesRotateBySize: [], // 需要按大小切割的文件，其他日志文件仍按照通常方式切割
+            maxFileSize: 1 * 1024 * 1024, // 限制单个日志最大文件为1M，这是因为UAE上面显示最多只能是1M大小的数据
+            maxFiles: 10, // 按大小切割时，文件最大切割的分数
+            maxDays: 31, // 默认保存一个月的数据
+            rotateDuration: 60000, // 按大小切割时，文件扫描的间隔时间
+        },
+        bodyParser: {
+            formLimit: '1024kb',
+            jsonLimit: '1024kb',
+        },
+        jwt: {
+            secret: 'cool-jobs',
+            option: {
+                expiresIn: '1d',
+            },
+        },
 
-  exports.static = {
-    prefix: '/public/',
-    dir: path.join(app.baseDir, 'public')
-  };
+        notfound: {
+            pageUrl: '/404',
+        },
+        // onerror: {
+        //     // 线上环境打开
+        //     errorPageUrl: '/500',
+        // },
 
-  exports.keys = '123456';
 
-  exports.middleware = [
-    'access'
-  ];
+         middleware: ['errorHandler'],
+        errorHandler: {
+            // 非 `/api/` 路径不在这里做错误处理，留给默认的 onerror 插件统一处理
+            match: '/api',
+        },
+        host: {
+            host: {
+                'bpwall:71an.com': '127.0.0.1',
+            },
+            mode: 'both', // `agent`,`worker`,`both`
+        },
+        io: {
+            namespace: {
+                '/': {
+                    connectionMiddleware: ['auth'],
+                    packetMiddleware: ['filter'],
+                },
+                '/chat': {
+                    connectionMiddleware: ['auth'],
+                    packetMiddleware: [],
+                },
+            },
+        }
+    };
 
-  return exports;
-};
+
+    return deepmerge(config, require('./app.config.js'));
+
+
+}
+;

@@ -16,6 +16,9 @@ module.exports = app => {
             this.config = this.ctx.app.config;
 
         }
+        * say() {
+            return 'Helle Man!';
+        }
 
 
         * register(user) {

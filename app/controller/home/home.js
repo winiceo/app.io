@@ -1,20 +1,50 @@
-const Model = require('../../mocks/article/list');
+// const Model = require('../../mocks/article/list');
+//
+// exports.index = function* (ctx) {
+//    ctx.body={success:ctx.session};
+//    //yield ctx.render('index/index.js', Model.getPage(1, 10));
+// };
+//
+// exports.client = function* (ctx) {
+//   yield ctx.renderClient('index/index.js', Model.getPage(1, 10));
+// };
+//
+// exports.element = function* (ctx) {
+//   yield ctx.render('element/element.js', Model.getPage(1, 10));
+// };
+//
+// exports.pager = function* (ctx) {
+//   const pageIndex = ctx.query.pageIndex;
+//   const pageSize = ctx.query.pageSize;
+//   ctx.body = Model.getPage(pageIndex, pageSize);
+// };
+'use strict';
 
-exports.index = function* (ctx) {
-   ctx.body={success:ctx.session};
-   //yield ctx.render('index/index.js', Model.getPage(1, 10));
+
+'use strict';
+
+module.exports = app => {
+    class homeController extends app.Controller {
+
+        * index() {
+            this.ctx.body = '来了';
+        }
+        * notFound(){
+            this.ctx.status = 404;
+            yield this.ctx.render('page/404.html');
+        }
+        * error(){
+
+            app.logger.info(this.session)
+            //this.ctx.session.user_id=null
+            yield this.ctx.render('page/500.html');
+        }
+
+
+
+    }
+    return homeController;
 };
 
-exports.client = function* (ctx) {
-  yield ctx.renderClient('index/index.js', Model.getPage(1, 10));
-};
 
-exports.element = function* (ctx) {
-  yield ctx.render('element/element.js', Model.getPage(1, 10));
-};
 
-exports.pager = function* (ctx) {
-  const pageIndex = ctx.query.pageIndex;
-  const pageSize = ctx.query.pageSize;
-  ctx.body = Model.getPage(pageIndex, pageSize);
-};

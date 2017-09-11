@@ -4,15 +4,7 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="标题" v-model="listQuery.title">
       </el-input>
 
-      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance" placeholder="重要性">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
-        </el-option>
-      </el-select>
 
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type" placeholder="类型">
-        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
-        </el-option>
-      </el-select>
 
       <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
@@ -38,40 +30,22 @@
         <!--</template>-->
       <!--</el-table-column>-->
 
-      <el-table-column width="180px" align="center" label="时间">
+      <el-table-column width="120px" align="center" label="时间">
         <template scope="scope">
           <span>{{scope.row.createdAt }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="标题">
+      <el-table-column min-width="200px" label="标题">
         <template scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>
-          <el-tag>{{scope.row.type | typeFilter}}</el-tag>
-        </template>
+          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.name}}</span>
+         </template>
       </el-table-column>
 
-      <el-table-column width="110px" align="center" label="作者">
+
+      <el-table-column align="center" label="打开数" width="95">
         <template scope="scope">
-          <span>{{scope.row.author}}</span>
-        </template>
-      </el-table-column>
-
-      <!--<el-table-column width="110px" v-if='showAuditor' align="center" label="审核人">-->
-        <!--<template scope="scope">-->
-          <!--<span style='color:red;'>{{scope.row.auditor}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <!--<el-table-column width="80px" label="重要性">-->
-        <!--<template scope="scope">-->
-          <!--<icon-svg v-for="n in +scope.row.importance" icon-class="wujiaoxing" class="meta-item__icon" :key="n"></icon-svg>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-
-      <el-table-column align="center" label="阅读数" width="95">
-        <template scope="scope">
-          <span class="link-type" @click='handleFetchPv(scope.row.pageviews)'>{{scope.row.pageviews}}</span>
+          <span class="link-type" @click='handleFetchPv(scope.row.pageviews)'>333{{scope.row.pageviews}}</span>
         </template>
       </el-table-column>
 
@@ -81,8 +55,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="150">
+      <el-table-column align="center" label="操作" width="280">
         <template scope="scope">
+          <el-button   size="small" type="success" @click="showPreView(scope.row)">预览
+          </el-button>
+
           <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
           </el-button>
           <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿
@@ -150,7 +127,7 @@
         <el-button type="primary" @click="dialogPvVisible = false">确 定</el-button>
       </span>
     </el-dialog>
-
+    <PreView :item="item" @hideView="isShowPreView=false" v-if="isShowPreView"/>
   </div>
 </template>
 
@@ -158,6 +135,7 @@
     import { fetchList, fetchPv } from '@/api/activity'
     import waves from '@/framework/vue/directive/waves.js'// 水波纹指令
     import { parseTime } from '@/utils'
+    import PreView from '@/components/PreView'
 
     const calendarTypeOptions = [
         { key: 'CN', display_name: '中国' },
@@ -173,12 +151,18 @@
     }, {})
 
     export default {
+        components: {
+             PreView
+        },
         name: 'table_demo',
         directives: {
             waves
         },
         data() {
             return {
+                item:{},
+                isShowPreView: false,
+                itemId: null,
                 list: null,
                 total: null,
                 listLoading: true,
@@ -233,6 +217,10 @@
             this.getList()
         },
         methods: {
+            showPreView (item) {
+                this.isShowPreView = true
+                this.item = item
+            },
             getList() {
                 this.listLoading = true
                 fetchList(this.listQuery).then(response => {
@@ -330,10 +318,10 @@
                 }
             },
             handleFetchPv(pv) {
-                fetchPv(pv).then(response => {
-                    this.pvData = response.data.pvData
+                //fetchPv(pv).then(response => {
+                    this.pvData = 333
                     this.dialogPvVisible = true
-                })
+               // })
             },
             handleDownload() {
                 require.ensure([], () => {

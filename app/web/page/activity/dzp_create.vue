@@ -63,7 +63,7 @@
             handlePublish: function () {
                 this.$store.dispatch('saveActivity').then(() => {
 
-                    // this.$router.push({name: 'activity-dzp'})
+                     this.$router.push({name: 'activity-dzp'})
                     // this.showDialog = true
                 }).catch(() => {
                  })

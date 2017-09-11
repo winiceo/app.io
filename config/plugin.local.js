@@ -5,7 +5,7 @@ exports.cors = {
 
 exports.webpack = {
   enable: true,
-  package: 'egg-webpack'
+  package: '../egg-webpack'
 };
 
 exports.webpackvue = {

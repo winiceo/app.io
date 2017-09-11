@@ -4,14 +4,8 @@ import { createActivity  } from '@/api/activity'
 
 const date = 'Mon Oct 17 2016 00:00:00 GMT+0800 (中国标准时间)'
 const ruleForm = {
-    name: '测试活动',
-    fenLeis: [
-        {name: '未发布'},
-        {name: '测试活动'},
-        {name: '精彩活动'}
-    ],
-    fenLei: '未发布',
-    tags: [{name: '喳喳'}],
+    name: '幸运大转盘活动',
+    cate:'dzp',
     activeStartTimeDate: date,
     activeStartTimeTime: '00:45',
     activeEndTimeDate: date,
@@ -20,38 +14,28 @@ const ruleForm = {
     signStartTimeTime: '00:45',
     signEndTimeDate: date,
     signEndTimeTime: '00:45',
+
     activePerson: '',
     activePersonNum: '',
     activeDescribe: '',
-    UseMsgShow: '',
-    evaluate: '',
-    adTitle: '',
-    adContent: '',
-    adLink: '',
     province: '广东省',
     city: '广州市',
-    detail: '番禺区广州大学城超谷科技园'
+    detail: '番禺区广州大学城超谷科技园',
+    status:'未开始',
 }
 
-const signForm = {
-    signUpLimit: '无限制',
+const awardForm = {
     numLimit: '无限制',
-    numLimitDetail: '',
-    cost: '免费',
-    costDetail: '',
-    cancel: '不允许',
-    audit: '不需要',
-    needName: true,
-    needTel: true,
-    signFormList: [
-        {title: '姓名', require: true},
-        {title: '手机', require: true},
-        {title: '性别', require: true},
-        {title: '婚姻状况', require: true}
+    gameMostPrize: '',
+    gameRate: '5',
+
+
+    awardList: [
+        {grade: '一等奖', name:'奖品名称',num:0 },
+        {grade: '二等奖', name:'奖品名称',num:0 },
+
     ],
-    sign: '必须报名',
-    signType: '签到二维码',
-    secretCode: ''
+
 }
 
 const shareForm = {
@@ -60,39 +44,7 @@ const shareForm = {
 }
 
 const selfForm = {
-    signUpSuccess: true,       // 报名成功
-    signUpSuccessText: '您已成功报名***(默认活动标题名)活动',
-    auditSuccess: true,
-    auditSuccessText: '您报名的***(默认活动标题名)活动，已审核通过',
-    auditFailed: true,
-    auditFailedText: '您报名的***(默认活动标题名)活动，审核不通过',
-    signInSuccess: true,
-    signInSuccessText: '***(默认用户名)您好！恭喜您签到成功！',
-    signInFailed: true,
-    signInFailedText: '抱歉，签到失败',
-    signInDouble: true,
-    signInDoubleText: '请勿重复签到！',
-    remind: '不提醒',
-    remindTime: '',
-    remindText: '',
-    useScore: '不使用',
-    useScoreNum: '',
-    signUpScore: '无积分',
-    signUpScoreNum: '',
-    shareScore: '无积分',
-    shareScoreNum: '',
-    shareReadScore: '无积分',
-    shareReadScoreNum: '',
-    shareReadScoreNumMax: '',
-    shareSignUp: '无积分',
-    shareSignUpNum: '',
-    shareSignUpNumMax: '',
-    afterShare: '',
-    afterShareLink: '',
-    afterSingUp: '',
-    afterSingUpLink: '',
-    shareImg: '',
-    shareImgUrl: ''
+
 }
 const data = [
     {
@@ -126,7 +78,7 @@ const data = [
  * */
 const state = {
     ruleForm: ruleForm,
-    signForm: {},
+    awardForm: {},
     shareForm: {},
     selfForm: {},
     activeList: data
@@ -151,9 +103,11 @@ const mutations = {
 
         console.log(state.ruleForm)
 
-    },setSignForm(state, payload) {
-        Object.assign(state.signForm, payload);
-        localStorage.setItem('signForm', JSON.stringify(payload));
+    },
+
+    setAwardForm(state, payload) {
+        Object.assign(state.awardForm, payload);
+        localStorage.setItem('awardForm', JSON.stringify(payload));
 
     },
     setShareForm(state, payload) {
@@ -177,7 +131,7 @@ const actions = {
         let data ={}
 
         console.log(state.ruleForm)
-         Object.assign(data,state.ruleForm,state.signForm,state.shareForm);
+         Object.assign(data,state.ruleForm,state.awardForm,state.shareForm);
         return new Promise((resolve, reject) => {
             createActivity(data).then(response => {
                 const data = response.data

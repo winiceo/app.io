@@ -2,10 +2,7 @@
 const Parse = require('../../lib/parse');
 const moment = require('moment');
 const _ = require('lodash');
-const ret = {
-    code:200,
-    data:{}
-};
+
 const Activity = Parse.Object.extend('activity');
 
 //活动管理
@@ -17,7 +14,10 @@ module.exports = app => {
             const {ctx, service} = this;
             const bpwall_id = ctx.params.id;
             const params=ctx.request.query;
-
+            const ret = {
+                code:200,
+                data:{}
+            };
             let test={cate:'dzp',
                 page: 1,
                 limit: 20,
@@ -49,9 +49,11 @@ module.exports = app => {
                 query.equalTo('cate', cate);
             }
 
-            console.log(page)
+
             query.limit(limit);
             query.skip(limit * (page-1));
+            query.descending('createdAt');// 先进先出，正序排列
+
 
             //app.logge.info(limit)
             yield query.count().then(function (count) {
@@ -65,9 +67,10 @@ module.exports = app => {
                 _.forEach(items, function (n, i) {
                     const item = n.toJSON();
 
-                    item.createdAt = ctx.helper.dateAt(n.createdAt, 'YYYY/MM/DD');
+                   item.createdAt = ctx.helper.dateAt(n.createdAt, 'YYYY/MM/DD');
                     temp.push(item);
                 });
+
                 ret.data.items = temp;
             }, function (error) {
 
@@ -82,10 +85,16 @@ module.exports = app => {
         * save() {
             const {ctx, service} = this;
             const body = ctx.request.body;
+            const ret = {
+                code:200,
+                data:{}
+            };
 
+            console.log(ctx.session.uid)
             const Activity = Parse.Object.extend('activity');
             const activity = new Activity();
-            activity.set('uid',"" );
+            activity.set('uid',ctx.session.uid );
+            activity.set('status',"draft" );
             activity.set(body);
 
             ret.data=yield activity.save();

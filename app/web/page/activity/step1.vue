@@ -124,13 +124,6 @@
           </el-row>
         </el-form-item>
 
-        <el-form-item label="活动封面">
-          <el-upload action="http://jsonplaceholder.typicode.com/" type="drag" :multiple="true" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError">
-            <i class="el-icon-upload"></i>
-            <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过2M</div>
-          </el-upload>
-        </el-form-item>
 
         <el-form-item label="活动简介">
             <el-input
@@ -187,30 +180,14 @@
           signEndTimeTime:     [{required:true,message:'请选择报名截止时间',trigger:'change'}],
         },
         ruleForm: {
-          name: '',
-          fenLeis:[
-            {name: '未发布'},
-            {name: '测试活动'},
-            {name: '精彩活动'}
-          ],
-          fenLei: '',
-          tags: [],
-          activeStartTimeDate: '',
-          activeStartTimeTime: '',
-          activeEndTimeDate: '',
-          activeEndTimeTime: '',
-          signStartTimeDate: '',
-          signStartTimeTime: '',
-          signEndTimeDate: '',
-          signEndTimeTime: '',
-          activePerson:'',
-          activePersonNum:'',
-          activeDescribe:'',
-          UseMsgShow:'',
-          evaluate:'',
-          adTitle:'',
-          adContent:'',
-          adLink:'',
+            name: '幸运大转盘活动',
+            cate:'dzp',
+
+
+            activePerson: '',
+            activePersonNum: '',
+            activeDescribe: ''
+
         }
       };
     },

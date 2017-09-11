@@ -1,61 +1,61 @@
 <template>
     <div class="step2">
 
-        <el-form ref="signForm" :model="signForm" label-position="top" @submit.prevent="onSubmit">
+        <el-form ref="awardForm" :model="awardForm" label-position="top" @submit.prevent="onSubmit">
 
 
             <el-form-item label="中奖次数限制" prop="">
                 <el-row>
                     <el-col :span="6">
-                        <el-radio class="radio" v-model="signForm.numLimit" label="无限制"></el-radio>
-                        <el-radio class="radio" v-model="signForm.numLimit" label="限制"></el-radio>
+                        <el-radio class="radio" v-model="awardForm.numLimit" label="无限制"></el-radio>
+                        <el-radio class="radio" v-model="awardForm.numLimit" label="限制"></el-radio>
                     </el-col>
                     <el-col :span="6">
-                        <el-input placeholder="0" :number="true" size="large" v-model="signForm.numLimitDetail"
-                                  :disabled=" signForm.numLimit == '无限制' ">
+                        <el-input placeholder="0" :number="true" size="large" v-model="awardForm.gameMostPrize"
+                                  :disabled=" awardForm.numLimit == '无限制' ">
                             <template slot="append">次</template>
                         </el-input>
                     </el-col>
                 </el-row>
             </el-form-item>
 
-            <el-form-item label="每日抽奖机会" prop="">
-                <el-row>
+            <!--<el-form-item label="每日抽奖机会" prop="">-->
+                <!--<el-row>-->
 
-                    <el-col :span="6">
-                        <el-input placeholder="0" :number="true" size="large" v-model="signForm.costDetail">
-                            <template slot="append">次</template>
-                        </el-input>
-                    </el-col>
-                </el-row>
-            </el-form-item>
+                    <!--<el-col :span="6">-->
+                        <!--<el-input placeholder="0" :number="true" size="large" v-model="awardForm.costDetail">-->
+                            <!--<template slot="append">次</template>-->
+                        <!--</el-input>-->
+                    <!--</el-col>-->
+                <!--</el-row>-->
+            <!--</el-form-item>-->
 
             <el-form-item label="中奖概率" prop="">
                 <el-row>
 
                     <el-col :span="6">
-                        <el-input placeholder="0" :number="true" size="large" v-model="signForm.costDetail">
+                        <el-input placeholder="0" :number="true" size="large" v-model="awardForm.gameRate">
                             <template slot="append">%</template>
                         </el-input>
                     </el-col>
                     <el-col :span="6">
-                        这意味着每10次抽奖3次获奖
+                        这意味着每100次抽奖5次获奖
                     </el-col>
                 </el-row>
             </el-form-item>
 
 
-            <el-form-item label="设置报名表" prop="" class="setSign">
+            <el-form-item label="奖项设置" prop="" class="setSign">
 
-                <el-row :gutter="20" v-for="item of signForm.signFormList">
+                <el-row :gutter="20" v-for="item of awardForm.awardList">
                     <el-col :span="3">
                         <el-input v-model="item.grade" size="large"></el-input>
                     </el-col>
                     <el-col :span="4" class="title">
-                        <el-input v-model="item.name" size="large"></el-input>
+                        <el-input v-model="item.name" size="large" placeholder="奖品名称"></el-input>
                     </el-col>
                     <el-col :span="10">
-                        <el-input-number v-model="item.num" :min="0"></el-input-number>
+                        <el-input  v-model="item.num"   placeholder="奖品数量"></el-input >
                     </el-col>
 
 
@@ -93,30 +93,25 @@
         data: function () {
             return {
                 imgUrl: '',
-                signForm: {
-                    signUpLimit: '无限制',
+                awardForm: {
                     numLimit: '无限制',
-                    numLimitDetail: '',
-                    cost: '免费',
-                    costDetail: '',
-                    cancel: '不允许',
-                    audit: '不需要',
-                    needName: true,
-                    needTel: true,
-                    signFormList: [
-                        {grade: '一等奖', name: '奖品名称', num: 0, require: true},
+                    gameMostPrize: '',
+                    gameRate: '5',
 
-                    ],
-                    sign: '必须报名',
-                    signType: '签到二维码',
-                    secretCode: ''
+
+                    awardList: [
+                        {grade: '一等奖', name:'奖品名称',num:0 },
+                        {grade: '二等奖', name:'奖品名称',num:0 },
+
+
+                    ]
                 }
             }
         },
         watch: {
-            signForm: {
+            awardForm: {
                 handler: function () {
-                    this.$store.commit('setSignForm', this.signForm);
+                    this.$store.commit('setAwardForm', this.awardForm);
                 },
                 deep: true
             }
@@ -127,8 +122,8 @@
             },
             addItem: function () {
                 var o = ["一", "二", "三", "四", "五", "六", "七", "八", "九"]
-                var n = this.signForm.signFormList ? this.signForm.signFormList.length : 0;
-                this.signForm.signFormList.push({
+                var n = this.awardForm.awardList ? this.awardForm.awardList.length : 0;
+                this.awardForm.awardList.push({
                     grade: o[n] + '等奖',
                     name: '奖品名称',
                     num: 0
@@ -136,30 +131,30 @@
                 });
             },
             removeItem: function (item) {
-                var index = this.signForm.signFormList.indexOf(item);
-                this.signForm.signFormList.splice(index, 1);
+                var index = this.awardForm.awardList.indexOf(item);
+                this.awardForm.awardList.splice(index, 1);
             },
 
             moveTop: function (item) {
-                var index = this.signForm.signFormList.indexOf(item);
+                var index = this.awardForm.awardList.indexOf(item);
                 if (index != 0) {
-                    this.signForm.signFormList.splice(index, 1);
-                    this.signForm.signFormList.splice(0, 0, item);
+                    this.awardForm.awardList.splice(index, 1);
+                    this.awardForm.awardList.splice(0, 0, item);
                 }
             },
             moveUp: function (item) {
-                var index = this.signForm.signFormList.indexOf(item);
+                var index = this.awardForm.awardList.indexOf(item);
                 if (index != 0) {
-                    this.signForm.signFormList.splice(index, 1);
-                    this.signForm.signFormList.splice(index - 1, 0, item);
+                    this.awardForm.awardList.splice(index, 1);
+                    this.awardForm.awardList.splice(index - 1, 0, item);
                 }
             },
             moveDown: function (item) {
-                var index = this.signForm.signFormList.indexOf(item);
-                var max = this.signForm.signFormList.length;
+                var index = this.awardForm.awardList.indexOf(item);
+                var max = this.awardForm.awardList.length;
                 if (index != max) {
-                    this.signForm.signFormList.splice(index, 1);
-                    this.signForm.signFormList.splice(index + 1, 0, item);
+                    this.awardForm.awardList.splice(index, 1);
+                    this.awardForm.awardList.splice(index + 1, 0, item);
                 }
             },
             createQRcode: function () {
@@ -171,7 +166,7 @@
             }
         },
         created: function () {
-            Object.assign(this.signForm, this.$store.state.activity.signForm);
+            Object.assign(this.awardForm, this.$store.state.activity.awardForm);
         }
     }
 </script>

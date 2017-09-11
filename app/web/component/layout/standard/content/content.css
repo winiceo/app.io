@@ -3,11 +3,7 @@
   padding: 80px 0 120px;
   box-sizing: border-box;
 }
-.page-container{
-  width: 1140px;
-  padding: 0 30px;
-  margin: 36 auto;
-}
+
 .page-component {
   padding-bottom: 95px;
   box-sizing: border-box

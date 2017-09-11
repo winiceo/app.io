@@ -12,7 +12,7 @@ exports.vue = {
 
 exports.vuessr = {
   enable: true,
-  package: 'egg-view-vue-ssr'
+  package: '../egg-view-vue-ssr'
 };
 exports.jwt = {
     enable: true,
@@ -32,4 +32,9 @@ exports.security = {
     csrf: {
         enable: false,
     },
+};
+
+exports.io = {
+    enable: true,
+    package: 'egg-socket.io',
 };
