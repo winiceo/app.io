@@ -12,6 +12,7 @@
     computed: {
       active: {
         get () {
+
           return this.$store.getters['dashboard/sidebarNavActive']
         }
       }

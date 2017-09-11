@@ -7,36 +7,6 @@
             <el-input v-model="ruleForm.name" size="large"></el-input>
         </el-form-item>
 
-        <el-form-item label="" prop="fenLei">
-	       <!-- 改装后的表单项，在标签栏添加了一个按钮 -->
-          <el-row style="height: 35px;" type="flex" align="middle">
-            <el-col :span="3" style="width: 90px;">
-              <div class="el-form-item__label" style="padding-bottom: 0;"> 活动分类</div>
-            </el-col>
-            <el-col  class="" :span="2">
-              <el-button type="text" @click.native="dialogFormFenLeiVisible = true" style="margin: 0;padding: 0;">设置</el-button>
-            </el-col>
-          </el-row>
-          <el-radio-group v-model="ruleForm.fenLei" >
-            <el-radio v-for="item of ruleForm.fenLeis" :label="item.name"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-	      <!-- 这里有一个坑，活动标签并不是一个表单元素，无法使用element自带的验证功能 -->
-        <el-form-item label="活动标签" required>
-            <el-tag
-              v-for="tag in ruleForm.tags"
-              :closable="true"
-              type="primary"
-              @close="handleClose(tag)"
-               >
-              {{tag.name}}
-            </el-tag>
-          <el-button icon="plus" size="large" @click.native="showDialog" style="vertical-align: middle;margin: 10px;"></el-button>
-          <transition name="fade">
-            <div class="el-form-item__error" v-show="tagsValid">{{ tagsError }}</div>
-          </transition>
-        </el-form-item>
 
         <el-form-item label="活动时间" required style="width: 750px;">
           <el-col :span="5">
@@ -145,7 +115,7 @@
         <el-form-item label="活动人数">
           <el-row>
           <el-col :span="6" style="width: 187px;">
-            <el-radio class="radio" v-model="ruleForm.activePerson" label="无限制">无限制</el-radio>
+            <el-radio class="radio" v-model="ruleForm.activePerson" label="无限制" checked>无限制</el-radio>
             <el-radio class="radio" v-model="ruleForm.activePerson" label="限制">限制</el-radio>
           </el-col>
           <el-col :span="6">
@@ -171,98 +141,10 @@
             </el-input>
         </el-form-item>
 
-        <el-form-item label="报名用户信息展示">
-          <el-radio-group v-model="ruleForm.UseMsgShow">
-            <el-radio label="不展示"></el-radio>
-            <el-radio label="展示报名人数"></el-radio>
-            <el-radio label="展示报名清单"></el-radio>
-            <el-radio label="报名成功显示完整用户资料"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="评价功能">
-          <el-radio-group v-model="ruleForm.evaluate">
-            <el-radio  label="不开启"></el-radio>
-            <el-radio  label="实时评价"></el-radio>
-            <el-radio  label="审核后评论"></el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="">
-          <el-row>
-            <div class="el-form-item__label"> 赞助广告</div>
-            <el-col  class="el-form-item__label is-active" :span="2">
-              <el-button type="text" @click.native="openAd">开通赞助广告</el-button>
-            </el-col>
-          </el-row>
-          <el-upload action="http://jsonplaceholder.typicode.com/" type="drag" :multiple="true" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError">
-            <i class="el-icon-upload"></i>
-            <div class="el-dragger__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">图片尺寸建议比例1；4.18，如160*666像素，且不超过2M</div>
-          </el-upload>
-        </el-form-item>
-
-        <el-form-item>
-          <el-input
-            placeholder="请填写您的广告标题"
-            size="large"
-            v-model="ruleForm.adTitle">
-          </el-input>
-        </el-form-item>
-
-        <el-form-item>
-        <el-input
-            placeholder="请填写您的广告内容"
-            size="large"
-            v-model="ruleForm.adContent">
-          </el-input>
-        </el-form-item>
-
-        <el-form-item >
-          <el-input
-            placeholder="请填写您的赞助链接"
-            size="large"
-            v-model="ruleForm.adLink">
-          </el-input>
-        </el-form-item>
 
         </el-form>
 
-      <!-- 弹框 -->
-      <el-dialog title="添加活动标签"  v-model="dialogFormVisible" top="35%">
-        <el-form :model="dialogForm">
-          <el-form-item>
-            <el-input v-model="dialogForm.name" auto-complete="off" ></el-input>
-          </el-form-item>
-        </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click.native="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary"  @click.native="handleAdd(dialogForm.name,dialogForm,ruleForm.tags)">添加</el-button>
-                </span>
-      </el-dialog>
 
-      <!-- 设置活动分类 -->
-      <el-dialog title="设置活动分类" v-model="dialogFormFenLeiVisible" >
-        <el-form :model="dialogFormFenLei">
-          <el-form-item>
-            <el-tag
-              v-for="feiLei of ruleForm.fenLeis"
-              :closable="true"
-              type="primary"
-              @close="handleCloseFenLei(feiLei)"
-              >
-              {{ feiLei.name }}
-            </el-tag>
-          </el-form-item>
-          <el-form-item>
-            <el-input v-model="dialogFormFenLei.name" auto-complete="off" ></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click.native="dialogFormFenLeiVisible = false">取 消</el-button>
-          <el-button type="primary"  @click.native="handleAdd(dialogFormFenLei.name,dialogFormFenLei,ruleForm.fenLeis)">添加</el-button>
-        </span>
-      </el-dialog>
     </div>
 </template>
 
@@ -335,7 +217,10 @@
     watch: {
       ruleForm: {
         handler: function (val,oldVal) {
-          this.$store.commit('setRuleForm',this.ruleForm);
+
+          //this.$store.commit('setRuleForm',this.ruleForm);
+
+            this.$store.dispatch('setRuleForm', this.ruleForm)
           this.tagsValid = !this.ruleForm.tags.length ? '' :false ;
           this.ruleFormChange = true ;
         },

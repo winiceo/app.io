@@ -42,7 +42,8 @@
         watch: {
             shareForm: {
                 handler: function () {
-                    store.commit('setShareForm', this.shareForm);
+
+                    this.$store.commit('setShareForm', this.shareForm);
                 } ,
                 deep:true
             }

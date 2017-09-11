@@ -2,7 +2,7 @@
    <div>
 
      <LayoutContent>
-       <div slot="content">jhgjhgjh<slot name="main"></slot></div>
+       <div slot="content"><slot name="main"></slot></div>
      </LayoutContent>
 
    </div>
@@ -17,11 +17,11 @@
 </style>
 <script type="text/babel">
   import 'asset/css/global.css';
-  import LayoutHeader from './header/header';
+
   import LayoutContent from './content/content';
   export default{
     components: {
-      LayoutHeader,
+
       LayoutContent
     }
   }

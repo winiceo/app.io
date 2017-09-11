@@ -1,4 +1,7 @@
 /* 测试数据 */
+
+import { createActivity  } from '@/api/activity'
+
 const date = 'Mon Oct 17 2016 00:00:00 GMT+0800 (中国标准时间)'
 const ruleForm = {
     name: '测试活动',
@@ -141,11 +144,14 @@ for (var item in state) {
 }
 
 const mutations = {
+
+
     setRuleForm(state, payload) {
-        Object.assign(state.ruleForm, payload);
-        localStorage.setItem('ruleForm', JSON.stringify(payload));
-    },
-    setSignForm(state, payload) {
+        state.ruleForm = payload
+
+        console.log(state.ruleForm)
+
+    },setSignForm(state, payload) {
         Object.assign(state.signForm, payload);
         localStorage.setItem('signForm', JSON.stringify(payload));
 
@@ -158,7 +164,35 @@ const mutations = {
         Object.assign(state.selfForm, payload);
         localStorage.setItem('selfForm', JSON.stringify(payload));
     }
+
 }
+
+
+const actions = {
+    setRuleForm ({commit}, value) {
+        commit('setRuleForm', value)
+    },
+
+    saveActivity ({ commit, state }, value) {
+        let data ={}
+
+        console.log(state.ruleForm)
+         Object.assign(data,state.ruleForm,state.signForm,state.shareForm);
+        return new Promise((resolve, reject) => {
+            createActivity(data).then(response => {
+                const data = response.data
+
+
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+
+
+}
+
 
 
 const getters = {
@@ -171,17 +205,9 @@ const getters = {
 }
 
 
-const actions = {
-    topNavActive({commit}, value) {
-        commit('topNavActive', value)
-    },
-    sidebarNavActive({commit}, value) {
-        commit('sidebarNavActive', value)
-    }
-}
 
 export default {
-    namespaced: true,
+
     state,
     getters,
     mutations,

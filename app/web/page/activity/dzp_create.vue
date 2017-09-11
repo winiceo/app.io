@@ -2,10 +2,9 @@
   <div class="activePublic ">
     <el-steps :space="200" :active="step" class="step">
       <el-step title="活动信息" description=""></el-step>
-      <el-step title="报名签到" description=""></el-step>
+      <el-step title="奖品设置" description=""></el-step>
       <el-step title="分享设置" description=""></el-step>
-      <el-step title="个性设置" description=""></el-step>
-    </el-steps>
+     </el-steps>
 
     <transition name="fade">
       <router-view class="view"></router-view>
@@ -62,7 +61,12 @@
 
             },
             handlePublish: function () {
-                console.log('发布');
+                this.$store.dispatch('saveActivity').then(() => {
+
+                    // this.$router.push({name: 'activity-dzp'})
+                    // this.showDialog = true
+                }).catch(() => {
+                 })
             },
             goStep: function (n) {
                 switch (n) {
@@ -72,10 +76,8 @@
                     case 2 :
                         this.preview = false;this.preStep = true;this.nextStep = true;this.publish = false;
                         break;
+
                     case 3 :
-                        this.preview = false;this.preStep = true;this.nextStep = true;this.publish = false;
-                        break;
-                    case 4 :
                         this.preview = false;this.preStep = true;this.nextStep = false;this.publish = true;
                         break;
                 }

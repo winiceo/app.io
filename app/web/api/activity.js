@@ -15,11 +15,11 @@ export function fetchArticle() {
   })
 }
 
-export function fetchPv(pv) {
+export function createActivity(data) {
   return fetch({
-    url: '/activity/pv',
-    method: 'get',
-    params: { pv }
+    url: '/activity/save',
+    method: 'post',
+    data: data
   })
 }
 
