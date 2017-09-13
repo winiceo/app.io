@@ -21,7 +21,7 @@ module.exports = app => {
 
   if (app.config.webpack.proxy) {
     app.use(function* (next) {
-      console.log(this.url)
+      //console.log(this.url)
       const ext = path.extname(this.url).toLocaleLowerCase().replace(/^\./, '');
       const proxyMapping = app.config.webpack.proxyMapping;
       const matched = Object.keys(proxyMapping).some(item => {

@@ -16,7 +16,7 @@ module.exports = app => {
             this.config = this.ctx.app.config;
 
         }
-        * say() {
+        * mobile(id) {
             return 'Helle Man!';
         }
 

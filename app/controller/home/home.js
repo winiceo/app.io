@@ -27,7 +27,35 @@ module.exports = app => {
     class homeController extends app.Controller {
 
         * index() {
-            this.ctx.body = '来了';
+
+             
+
+            const result=  yield app.mysql.get('ims_leven_ds_account', {
+                id: 15,
+            });
+            this.ctx.body = result;
+        }
+
+        * test() {
+            const params=this.ctx.request.query;
+
+            let result=  yield app.mysql.get('ims_leven_ds_account', {
+                id: params['id'],
+            });
+            if (!result){
+                result={no:''}
+            }
+            console.log(app.wechat)
+            this.ctx.body = result;
+            // let ret={
+            //     stat:0,
+            //     pid:33,
+            //     msg:333,
+            //     type:2
+            //
+            //
+            // }
+            // this.ctx.body = ret;
         }
         * notFound(){
             this.ctx.status = 404;

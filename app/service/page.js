@@ -2,9 +2,7 @@
 const _ = require('lodash');
 const Parse = require('../lib/parse');
 module.exports = app => {
-    /**
-     * wall Api Service
-     */
+
     class PageService extends app.Service {
         constructor(ctx) {
             super(ctx);
@@ -15,7 +13,7 @@ module.exports = app => {
         }
 
         /**
-         *
+         *获取页面信息
          * @param pageid
          * @returns {*}
          */
@@ -41,6 +39,8 @@ module.exports = app => {
             }
             return page;
         }
+
+
 
 
     }

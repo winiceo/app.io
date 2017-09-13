@@ -35,6 +35,19 @@ exports.security = {
 };
 
 exports.io = {
-    enable: true,
+    enable: false,
     package: 'egg-socket.io',
+};
+exports.cors = {
+    enable: true,
+    package: 'egg-cors',
+};
+
+exports.mysql = {
+    enable: true,
+    package: 'egg-mysql',
+};
+exports.wechat = {
+    enable: true,
+    package: '../egg-wechat',
 };

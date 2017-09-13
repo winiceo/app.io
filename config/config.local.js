@@ -31,6 +31,8 @@ module.exports = app => {
     domainWhiteList.push(`http://localhost:${port}`);
     domainWhiteList.push(`http://127.0.0.1:${port}`);
     domainWhiteList.push(`http://${localIP}:${port}`);
+    domainWhiteList.push(`.qq.com`);
+    domainWhiteList.push(`.71an.com`);
   });
 
   exports.security = {

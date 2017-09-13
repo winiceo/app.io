@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,13 +10,13 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
 
-    <link rel="stylesheet" href="/css/zhuanpan.css?v=0831_001401">
-    <link href="/css/m-base.css" type="text/css" rel="stylesheet">
-    <link href="/css/h5/common.css" rel="stylesheet" type="text/css">
-    <script src="/js/jquery-1.9.1.min.js"></script>
-    <script src="/js/jquery.easing.min.js"></script>
+    <link rel="stylesheet" href="{{config.cdn}}/css/zhuanpan.css?v=0831_001401">
+    <link href="{{config.cdn}}/css/m-base.css" type="text/css" rel="stylesheet">
+    <link href="{{config.cdn}}/css/h5/common.css" rel="stylesheet" type="text/css">
+    <script src="{{config.cdn}}/js/jquery-1.9.1.min.js"></script>
+    <script src="{{config.cdn}}/js/jquery.easing.min.js"></script>
 
-    <title>大转盘-趣现场</title>
+    <title>{{page.name}}</title>
 
     <script>
         //alert(document.documentElement.clientWidth+'/'+document.documentElement.clientHeight);
@@ -63,7 +62,7 @@
                 <!--转盘-->
                 <canvas id="lottery" width="450" height="450"></canvas>
                 <div  class="pointer" >
-                    <img src="/images/zhuanpan2016/m-zhen.png"/>
+                    <img src="{{config.cdn}}/images/zhuanpan2016/m-zhen.png"/>
                     <div class="user-pic"><img width="74" height="74" src="http://wx.qlogo.cn/mmopen/vi_32/NiakQJN4uSLMBZxBrKecWlHMicJ0G3Z3pzJxNYM0iac9vFdNWU7ULyiaN5oYJGJ03Hcu9kHyibNG5wlQzCU3Zicp35ag/0"></div>
                 </div>
             </div>
@@ -79,8 +78,8 @@
     <div class="item3">
         <div class="mask"></div>
         <div class="mess">
-            <img src="/images/zhuanpan2016/line.png">
-            <img src="/images/zhuanpan2016/hand.png" >
+            <img src="{{config.cdn}}/images/zhuanpan2016/line.png">
+            <img src="{{config.cdn}}/images/zhuanpan2016/hand.png" >
             <p>拨动转盘进行游戏</p>
         </div>
     </div>
@@ -133,36 +132,41 @@
                 <p>您已参与过此次互动</p>
                 <p>请把机会留给其他人~</p>
             </div>
-            <img src="/images/zhuanpan2016/logo.png" class="logo">
+            <img src="{{config.cdn}}/images/zhuanpan2016/logo.png" class="logo">
         </div>
     </div>
     <!--end:温馨提示-->
 
     <!--start:分享提示-->
     <div id="guide" class="float-bg hidden">
-        <div class="float-tip"><img src="/images/weixin_share_guide.png"></div>
+        <div class="float-tip"><img src="{{config.cdn}}/images/weixin_share_guide.png"></div>
     </div>
 
 </div>
 </body>
+<script src="{{config.cdn}}/js/m/socket.js"></script>
 <script>
-    var websocketUrl = "ws://localhost:7001",
+
+
+    var websocketUrl = "ws://localhost:7001/",
         companyId= "101039",
         hasJoin  = "",
         sessionId= "41a4vo3e5t9oho36to5h58oad7";
+    var   token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfdWlkIjoiNTkxMDIzODM5MzE0MDBkNmM3ZGY1NTA2IiwiaWF0IjoxNDk0OTIyNzYxfQ.kc9t24cQit7LtALbiQkVLxVuk7JLxgJVqftD5Qtl3ks';
+
     var ani = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 
 </script>
-<script type="text/javascript" src="/js/deviceMotion.js?v=138ba0"></script>
-<script type="text/javascript" src="/js/m/zhuanpan_m.js?v=6d6789"></script>
+<script type="text/javascript" src="{{config.cdn}}/js/deviceMotion.js?v=138ba0"></script>
+<script type="text/javascript" src="{{config.cdn}}/js/m/zhuanpan_m.js?v=6d6789"></script>
 
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript">
     var pageName  = "";
     if (pageName == 'third_anniversary') {
-        var shareImg   = "/images/m-paper-stars/share_new.png";
+        var shareImg   = "{{config.cdn}}/images/m-paper-stars/share_new.png";
     } else {
-        var shareImg   = "http://www.quxianchang.com/images/h5/share.png";
+        var shareImg   = "http://www.quxianchang.com{{config.cdn}}/images/h5/share.png";
     }
     var shareTitle = "我正在玩趣现场大转盘游戏";
     var shareLink = "http://www.quxianchang.com/wxscreen/zhuanpan/m/share?zhuanpan=413&from_user=JywjYFAsI2BTLGBgYApgCg";

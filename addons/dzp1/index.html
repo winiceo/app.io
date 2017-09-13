@@ -19,7 +19,7 @@
     <title>{{page.name}}</title>
 
     <script>
-       //alert(document.documentElement.clientWidth+'/'+document.documentElement.clientHeight);
+        //alert(document.documentElement.clientWidth+'/'+document.documentElement.clientHeight);
     </script>
 </head>
 <body>
@@ -62,7 +62,7 @@
                 <!--转盘-->
                 <canvas id="lottery" width="450" height="450"></canvas>
                 <div  class="pointer" >
-                    <img src="/images/zhuanpan2016/m-zhen.png"/>
+                    <img src="{{config.cdn}}/images/zhuanpan2016/m-zhen.png"/>
                     <div class="user-pic"><img width="74" height="74" src="http://wx.qlogo.cn/mmopen/vi_32/NiakQJN4uSLMBZxBrKecWlHMicJ0G3Z3pzJxNYM0iac9vFdNWU7ULyiaN5oYJGJ03Hcu9kHyibNG5wlQzCU3Zicp35ag/0"></div>
                 </div>
             </div>
@@ -71,15 +71,15 @@
 
         </div>
     </div>
-    <div class="logo"></div>
+
     <!--end:大转盘抽奖-->
 
     <!--start:操作提示-->
     <div class="item3">
         <div class="mask"></div>
         <div class="mess">
-            <img src="/images/zhuanpan2016/line.png">
-            <img src="/images/zhuanpan2016/hand.png" >
+            <img src="{{config.cdn}}/images/zhuanpan2016/line.png">
+            <img src="{{config.cdn}}/images/zhuanpan2016/hand.png" >
             <p>拨动转盘进行游戏</p>
         </div>
     </div>
@@ -132,23 +132,28 @@
                 <p>您已参与过此次互动</p>
                 <p>请把机会留给其他人~</p>
             </div>
-            <img src="/images/zhuanpan2016/logo.png" class="logo">
+            <img src="{{config.cdn}}/images/zhuanpan2016/logo.png" class="logo">
         </div>
     </div>
     <!--end:温馨提示-->
 
     <!--start:分享提示-->
     <div id="guide" class="float-bg hidden">
-        <div class="float-tip"><img src="/images/weixin_share_guide.png"></div>
+        <div class="float-tip"><img src="{{config.cdn}}/images/weixin_share_guide.png"></div>
     </div>
 
 </div>
 </body>
+<script src="{{config.cdn}}/js/m/socket.js"></script>
 <script>
+
+
     var websocketUrl = "ws://localhost:7001",
-            companyId= "101039",
-            hasJoin  = "",
-            sessionId= "41a4vo3e5t9oho36to5h58oad7";
+        companyId= "101039",
+        hasJoin  = "",
+        sessionId= "41a4vo3e5t9oho36to5h58oad7";
+    var  token = '{{config.token}}'
+
     var ani = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
 
 </script>
@@ -157,59 +162,59 @@
 
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript">
-var pageName  = "";
-if (pageName == 'third_anniversary') {
-    var shareImg   = "/images/m-paper-stars/share_new.png";
-} else {
-    var shareImg   = "http://www.quxianchang.com/images/h5/share.png";
-}
-var shareTitle = "我正在玩趣现场大转盘游戏";
-var shareLink = "http://www.quxianchang.com/wxscreen/zhuanpan/m/share?zhuanpan=413&from_user=JywjYFAsI2BTLGBgYApgCg";
-var shareDesc = "我正在玩趣现场大转盘游戏";
+    var pageName  = "";
+    if (pageName == 'third_anniversary') {
+        var shareImg   = "{{config.cdn}}/images/m-paper-stars/share_new.png";
+    } else {
+        var shareImg   = "http://www.quxianchang.com{{config.cdn}}/images/h5/share.png";
+    }
+    var shareTitle = "我正在玩趣现场大转盘游戏";
+    var shareLink = "http://www.quxianchang.com/wxscreen/zhuanpan/m/share?zhuanpan=413&from_user=JywjYFAsI2BTLGBgYApgCg";
+    var shareDesc = "我正在玩趣现场大转盘游戏";
 
-  wx.config({
-      debug: false,
-      appId: 'wx1c79ac47c6b75f6b', // 必填，公众号的唯一标识
-      timestamp: '1505117833', // 必填，生成签名的时间戳
-      nonceStr: 'SjBKzdAfjsmSwtjV', // 必填，生成签名的随机串
-      signature: '57fa60f2b51ebb2d6151fb8b0ed59349b6b54370',// 必填，签名，见附录1
+    wx.config({
+        debug: false,
+        appId: 'wx1c79ac47c6b75f6b', // 必填，公众号的唯一标识
+        timestamp: '1505117833', // 必填，生成签名的时间戳
+        nonceStr: 'SjBKzdAfjsmSwtjV', // 必填，生成签名的随机串
+        signature: '57fa60f2b51ebb2d6151fb8b0ed59349b6b54370',// 必填，签名，见附录1
 
-      jsApiList: [
-        "menuItem:share:appMessage",
+        jsApiList: [
+            "menuItem:share:appMessage",
             "onMenuShareTimeline",
             "onMenuShareAppMessage",
             "onMenuShareQQ",
             "onMenuShareWeibo",
-      ]
+        ]
     });
 
-  wx.ready(function () {
-      wx.onMenuShareTimeline({
-      title: shareTitle, // 分享标题,改成desc
-      link: shareLink, // 分享链接
-      imgUrl: shareImg, // 分享图标
-      success: function () { 
-          //postShareData({ "ref_uid":user_id, "url" : window.location.href, "type" : wxData.type });
-      },
-      cancel: function () { 
-          // 用户取消分享后执行的回调函数
-      }
-      });
+    wx.ready(function () {
+        wx.onMenuShareTimeline({
+            title: shareTitle, // 分享标题,改成desc
+            link: shareLink, // 分享链接
+            imgUrl: shareImg, // 分享图标
+            success: function () {
+                //postShareData({ "ref_uid":user_id, "url" : window.location.href, "type" : wxData.type });
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
 
-    wx.onMenuShareAppMessage({
-      title: shareTitle, // 分享标题
-      desc: shareDesc, // 分享描述
-      link: shareLink, // 分享链接
-      imgUrl: shareImg, // 分享图标
-      type: '', // 分享类型,music、video或link，不填默认为link
-      dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-      success: function () { 
-          //postShareData({ "ref_uid":user_id, "url" : window.location.href, "type" : wxData.type });
-      },
-      cancel: function () { 
-          // 用户取消分享后执行的回调函数
-      }
+        wx.onMenuShareAppMessage({
+            title: shareTitle, // 分享标题
+            desc: shareDesc, // 分享描述
+            link: shareLink, // 分享链接
+            imgUrl: shareImg, // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+                //postShareData({ "ref_uid":user_id, "url" : window.location.href, "type" : wxData.type });
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
     });
-  });
 </script>
 </html>

@@ -3,22 +3,29 @@
  */
 
 
-const wechat = require('co-wechat');
+const wechatLib = require('../lib/wechat');
 const Parse = require('../lib/parse');
-
+const env=require('../../config/environment')
 module.exports = (options, app) => {
-    // return function* gzip(next) {
+
+    const wechat=wechatLib(app)
+    // console.log(app.config)
+    // config= {
+    //         token: env.get('WECHAT_TOKEN'),
+    //         appid: env.get('WECHAT_APPID'),
+    //         //encodingAESKey: env.get('WECHAT_ENCODINGAESKEY'),
+    //         appsecret: env.get('WECHAT_APPSECRET'),
     //
-    //     yield next;
-    //     console.log(335)
-    //     wechat("cvmswebapp").middleware(function(){
-    //         "use strict";
-    //         console.log(3333)
-    //         app.weixin=this.weixin
-    //     })
+    //         pay: {
+    //             partnerKey: '33',
+    //             mchId: '33',
+    //             notifyUrl: '',
+    //             pfx: ''
+    //     }
     // }
 
-  return wechat('cvmswebapp').middleware(function* () {
+
+  return wechat.middleware(function* () {
     const message = this.weixin;
     const self = this;
     let ret = {

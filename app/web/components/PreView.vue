@@ -7,7 +7,7 @@
       </div>
       <div class="setting">
         <div class="info">
-          <div class="label">设置作品信息</div>
+          <div class="label">设置信息</div>
           <el-input class="input"
                     v-model="title"
                     @blur="saveTitle"
@@ -40,7 +40,7 @@
               </div>
             <el-button type="info" @click="copyUrl">复制链接</el-button>
           </div>
-          <div class="edit" @click="edit"><el-button style="width:180px" type="primary" icon="edit">编   辑</el-button></div>
+          <!--<div class="edit" @click="edit"><el-button style="width:180px" type="primary" icon="edit">编   辑</el-button></div>-->
         </div>
       </div>
       <div class="close" @click="close">
@@ -53,7 +53,7 @@
 <style lang="less" scoped>
 .wrap {
   position: fixed;
-  top: 0;
+  top: 10px;
   right: 0;
   bottom: 0;
   left: 0;
@@ -90,6 +90,10 @@
       .info {
         .input {
           margin-top: 10px;
+        }
+        .label{
+          color:black;
+          font-size:15px;
         }
       }
       .qrcode {
@@ -141,7 +145,7 @@
     position: absolute;
     color: #fff;
     right: -30px;
-    top:0px;
+    top:10px;
     cursor: pointer;
   }
 }
@@ -159,7 +163,7 @@ export default {
   },
   data () {
     return {
-      releaseUrl: config.baseUrl + '/pages/' + this.item.objectId + '',
+      releaseUrl: config.baseUrl + '/activity/' + this.item.objectId + '',
       title: this.item.name || '',
       description: this.item.description || '',
       qrcodeSize: 500

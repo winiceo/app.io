@@ -1,12 +1,42 @@
+
 module.exports = app => {
 
-    app.io.route('chat', app.io.controllers.chat);
+    const checkWechat = app.middlewares.checkwechat({}, app);
 
-    // app.io.of('/chat')
-    app.io.of('/chat').route('chat', app.io.controllers.chat);
+    //const checkid = app.middlewares.checkid({}, app);
+    const checksession = app.middlewares.checksession({}, app);
+    const xml = app.middlewares.xmlparser({}, app);
+    const wechatPayment = app.middlewares.wechatpay({}, app);
+
+    // 处理微信主动通知的消息 appid 不为同公从号，暂未处理
+    app.all('/wechat/:appid', checkWechat, 'wechat.wechat.wechat');
+
+    //支付通知
+    // app.all('/api/pay/notify', xml, wechatPayment.middleware(), 'order.notify');
+
+    //微信回调
+    app.get('/wc/callback', 'wechat.wechat.callback');
 
 
-    app.get('/index',  app.controller.home.home.index);
+    //活动页面处理
+    app.get('/activity/:id', app.controller.page.activity.index);
+
+    //文章类页面处理
+    app.get('/pages/:id', app.controller.page.page.index);
+
+    //socket 相关
+    // app.io.route('lottery', app.io.controllers.lottery);
+    //app.io.of('/').route('lottery', app.io.controllers.lottery);
+
+
+
+    //const wechat = app.middlewares.wechat();
+
+    app.get('/app/:id', 'wechat.wechat.index');
+
+    app.get('/home', app.controller.home.home.index);
+
+    app.get('/test', app.controller.home.home.test);
 
     app.get('/app/api/article/list', app.controller.app.app.list);
     app.get('/app/api/article/:id', app.controller.app.app.detail);
@@ -24,7 +54,11 @@ module.exports = app => {
 
 
 
-    app.get('/pages/:id', app.controller.page.page.detail);
+    //我的奖品
+    app.post('/lottery/user/awardresult', app.controller.page.lottery.awardresult);
+    app.post('/lottery/getresult', app.controller.page.lottery.getresult);
+    app.post('/lottery/draw', app.controller.page.lottery.draw);
+    app.post('/lottery/saveinfo', app.controller.page.lottery.saveinfo);
 
     //
     // app.get('/client', app.controller.home.home.client);
@@ -47,7 +81,6 @@ module.exports = app => {
     // app.get('/test', app.controller.test.test.index);
 
 
-
-   // app.get('/500', app.controller.home.error);
-    app.get('/*', app.controller.home.notFound);
+    // app.get('/500', app.controller.home.error);
+    //app.get('/404', app.controller.home.notFound);
 };
