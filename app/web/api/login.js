@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import {fetch,_post,_get} from '@/utils/fetch'
 
 export function loginByUsername(username, password) {
   const data = {
@@ -6,11 +6,9 @@ export function loginByUsername(username, password) {
     password
   }
 
-  return fetch({
-    url: '/user/login',
-    method: 'post',
-    data
-  })
+
+  return _post('/user/login',data)
+
 }
 
 export function logout() {

@@ -16,19 +16,20 @@ axios.defaults.baseURL = config.api.root + '/'
 
 
 //创建一个axios实例
-const service = axios.create();
+const fetch = axios.create();
 
-service.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+fetch.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
 // request拦截器
-service.interceptors.request.use(config => {
+fetch.interceptors.request.use(config => {
     // Do something before request is sent
-    if (store.getters.token) {
-
-        config.headers.Authorization = `token ${getToken()}`;
-
-        config.headers['X-Token'] = getToken() // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
-    }
+    //console.log(store.getters.token())
+    // if (store.getters.token) {
+    //
+    //     config.headers.Authorization = `token ${getToken()}`;
+    //
+    //     config.headers['X-Token'] = getToken() // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
+    // }
     return config
 }, error => {
     // Do something with request error
@@ -37,7 +38,7 @@ service.interceptors.request.use(config => {
 })
 
 // respone拦截器
-service.interceptors.response.use(
+fetch.interceptors.response.use(
     response => {
         /**
          * 下面的注释为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页
@@ -80,29 +81,30 @@ service.interceptors.response.use(
 )
 
 
-function  get (url, params)  {
+function _get(url, params) {
 
 
-    const promise = service.get(url, {params: params});
+    const promise = fetch.get(url, {params: params});
     return new Promise((resolve, reject) => {
-        promise.then((result)=> {
+        promise.then((result) => {
             resolve(result.data);
-        }).catch((error)=> {
+        }).catch((error) => {
             reject(error.response.data);
         })
     })
 };
 
-function post(url, params){
+function _post(url, params) {
 
     return new Promise((resolve, reject) => {
-        service.post(url, params)
+        fetch.post(url, params)
             .then(response => {
                 resolve(response.data);
             }, err => {
                 reject(err);
             })
             .catch((error) => {
+            alert(error)
                 reject(error)
             })
     })
@@ -110,4 +112,5 @@ function post(url, params){
 
 }
 
-export default service
+
+export  {fetch, _get, _post}

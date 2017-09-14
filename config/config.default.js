@@ -73,6 +73,12 @@ module.exports = appInfo => {
                     expiresIn: '1d',
                 },
             },
+            session: {
+                key: '71an',
+                maxAge: 24 * 3600 * 1000, // 1 天
+                httpOnly: true,
+                encrypt: true,
+            },
 
             // notfound: {
             //     pageUrl: '/404',
@@ -83,7 +89,7 @@ module.exports = appInfo => {
             // },
 
 
-            //middleware: ['errorHandler'],
+            middleware: ['savesession'],
             errorHandler: {
                 // 非 `/api/` 路径不在这里做错误处理，留给默认的 onerror 插件统一处理
                 match: '/api',

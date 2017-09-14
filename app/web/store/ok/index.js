@@ -1,19 +1,22 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 Vue.use(Vuex);
 
-import cart from './cart/';
+import activity from './activity/';
 import user from './user/';
-import global from './global/';
-import leftmenu from './leftmenu/';
-import router from './router/';
+import app from './common/app'
+
+import permission from './common/permission'
+import dashboard from './common/dashboard'
 
 export default new Vuex.Store({
     modules: {
-        cart,
+        activity,
         user,
-		global,
-		router,
-		leftmenu
+        app,
+        permission,
+        dashboard
+
     }
 });

@@ -22,12 +22,12 @@ module.exports = app => {
          */
 
         * checkAuth(options) {
-            const {ctx,service}=this;
+            const {ctx, service} = this;
             const query = querystring.stringify(options)
             const redirectUrl = `${app.config.baseUrl}/wc/callback?${query}`;
 
             const userInfo = yield service.wechat.info(ctx.session.user_id);
-            if (!userInfo||!ctx.session.user_id) {
+            if (!userInfo || !ctx.session.user_id) {
                 ctx.session.user_id = null;
 
                 const wechatClient = yield ctx.helper.oauthClient(function (err, client) {
@@ -80,7 +80,7 @@ module.exports = app => {
          */
         * processUser(wuser) {
             // const userId = yield app.redis.hget("openids", wuser.openid);
-            const {ctx}=this;
+            const {ctx} = this;
 
             let userInfo = yield this.infoByOpenid(wuser.openid);
             ///app.logger.debug('user:check:%s:%s', bpwall_id, JSON.stringify(userInfo));
@@ -96,8 +96,9 @@ module.exports = app => {
             }
 
             app.logger.info(userInfo)
-            console.log(this.ctx.session)
+            console.log('this.ctx.session')
             ctx.session.user_id = userInfo.objectId;
+            console.log(ctx.session)
 
             return userInfo;
         }
@@ -112,12 +113,22 @@ module.exports = app => {
             return wechatUser.save();
         }
 
+        * currentUser() {
+            const {ctx} = this;
+
+            return yield this.info(ctx.session.user_id)
+        }
+
 
         /**
          * 获取当前用户信息
          */
         * info(user_id) {
+
+
             let userInfo = yield app.redis.hget('users', user_id);
+
+
             app.logger.info('info:user: %s:%s', JSON.stringify(userInfo), _.isEmpty(userInfo));
 
             if (_.isEmpty(userInfo)) {
@@ -142,7 +153,7 @@ module.exports = app => {
                     return userInfo;
                 }
             }
-            if(userInfo==null){
+            if (userInfo == null) {
 
                 this.ctx.session.user_id = null;
             }
@@ -191,8 +202,6 @@ module.exports = app => {
             return null;
 
         }
-
-
 
 
         * getWechatConfig(url) {

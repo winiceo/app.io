@@ -13,7 +13,7 @@
 
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
 
-      <router-link :to="{name: 'create_setp'}" tag="span">
+      <router-link :to="{path: 'dzp/edit/0'}" tag="span">
         <el-button class="filter-item" style="margin-left: 10px;"   type="primary" icon="edit">创建活动</el-button>
       </router-link>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">添加</el-button>
@@ -62,9 +62,9 @@
 
           <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
           </el-button>
-          <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿
+          <el-button v-if="scope.row.status!='published'" size="small" @click="update(scope.row)">编辑
           </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="delete(scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -289,22 +289,11 @@
                     duration: 2000
                 })
             },
-            update() {
-                this.temp.timestamp = +this.temp.timestamp
-                for (const v of this.list) {
-                    if (v.id === this.temp.id) {
-                        const index = this.list.indexOf(v)
-                        this.list.splice(index, 1, this.temp)
-                        break
-                    }
-                }
-                this.dialogFormVisible = false
-                this.$notify({
-                    title: '成功',
-                    message: '更新成功',
-                    type: 'success',
-                    duration: 2000
-                })
+            update(item) {
+                this.$router.push({ path: 'dzp/edit/'+item.objectId })
+            },
+            delete(item){
+
             },
             resetTemp() {
                 this.temp = {

@@ -1,0 +1,11 @@
+{
+  "result": {
+    "joinId": 21623498,
+    "prize": "测试奖品",
+    "awardType": 2,
+    "redpackAmount": null,
+    "redpackId": null,
+    "grade": 2
+  },
+  "status": "success"
+}

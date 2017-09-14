@@ -7,7 +7,6 @@ module.exports = app => {
             const pageid = ctx.params.id;
 
             const page = yield ctx.service.page.get(pageid);
-
             //检测是否需要处理微信用户信息
             const userInfo= yield ctx.service.common.checkUserInfo(page)
 

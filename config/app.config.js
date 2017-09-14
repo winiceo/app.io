@@ -1,14 +1,14 @@
 const env = require('./environment');
-
+// console.log(env.all())
 module.exports = {
     baseUrl: env.get('BASE_URL'),
     appURL: env.get('BASE_URL'),
     ossURL: env.get('ALI_OSS_HOST'),
     certpfx: __dirname + '/apiclient_cert.p12',
     shareimg: `${env.get('ALI_OSS_HOST')}/static/share/share.png`,
-    logger: {
-        dir: env.get('LOGS'),
-    },
+    // logger: {
+    //     dir: env.get('LOGS'),
+    // },
     wechat: {
         token: env.get('WECHAT_TOKEN'),
         appid: env.get('WECHAT_APPID'),
@@ -40,16 +40,17 @@ module.exports = {
         // 单数据库信息配置
         client: {
             // host
-            host: 'lyzhtech.com',
+            host: env.get('MYSQL_HOST'),
             // 端口号
-            port: '3306',
+            port: env.get('MYSQL_PORT'),
             // 用户名
-            user: 'pmker',
+            user: env.get('MYSQL_USER'),
             // 密码
-            password: 'pmker.com',
+            password: env.get('MYSQL_PASSWORD'),
             // 数据库名
-            database: 'sky_dev',
+            database: env.get('MYSQL_DATABASE'),
         },
+
         // 是否加载到 app 上，默认开启
         app: true,
         // 是否加载到 agent 上，默认关闭

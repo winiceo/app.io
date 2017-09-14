@@ -90,17 +90,38 @@ module.exports = app => {
                 data:{}
             };
 
+
+
             console.log(ctx.session.uid)
             const Activity = Parse.Object.extend('activity');
             const activity = new Activity();
+
+
+            if (body.objectId) {
+                activity.id = body.objectId
+                yield app.redis.hdel('activitys', activity.id,function(e,b){
+                    console.log([e,b])
+                });
+            }else{
+
+            }
+
             activity.set('uid',ctx.session.uid );
             activity.set('status',"draft" );
             activity.set(body);
 
             ret.data=yield activity.save();
             ctx.body=ret;
+        }
 
-
+        * get(){
+            const {ctx, service} = this;
+            const activityId = ctx.params.id;
+            const ret = {
+                code:200,
+                data: yield service.activity.get(activityId)
+            };
+            ctx.body=ret;
         }
 
 

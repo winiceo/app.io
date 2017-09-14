@@ -83,12 +83,16 @@
             handleLogin() {
                 this.$refs.loginForm.validate(valid => {
                     if (valid) {
+
                         this.loading = true
-                        this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+
+                        this.$store.dispatch('LoginByUsername', this.loginForm).then((a) => {
+
                             this.loading = false
                             this.$router.push({path: '/'})
                             // this.showDialog = true
-                        }).catch(() => {
+                        }).catch((error) => {
+                            alert(error)
                             this.loading = false
                         })
                     } else {

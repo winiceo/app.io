@@ -9,20 +9,19 @@ module.exports = app => {
             this.config = this.ctx.app.config;
             this.user_id = this.ctx.session.user_id;
 
-
         }
 
         /**
-         *获取页面信息
+         *获取活动信息
          * @param pageid
          * @returns {*}
          */
 
         * get(pageid) {
-            let page = yield app.redis.hget('pages', pageid);
+            let page = yield app.redis.hget('activitys', pageid);
 
             if (!page) {
-                app.logger.info('cache:page');
+                app.logger.info('cache:activitys');
                 const query = new Parse.Query('activity');
                 page = yield query.get(pageid).then(function (page) {
                     if (page) {
@@ -35,7 +34,7 @@ module.exports = app => {
                     return null;
                 });
 
-                yield app.redis.hset('pages', pageid, page);
+                yield app.redis.hset('activitys', pageid, page);
             }
             return page;
         }

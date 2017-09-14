@@ -1,4 +1,4 @@
-import fetch from '@/utils/fetch'
+import {fetch,_get} from '@/utils/fetch'
 
 export function fetchList(query) {
   return fetch({
@@ -8,11 +8,8 @@ export function fetchList(query) {
   })
 }
 
-export function fetchArticle() {
-  return fetch({
-    url: '/activity/detail',
-    method: 'get'
-  })
+export function getActivity(id) {
+  return _get('/activity/get/'+id)
 }
 
 export function createActivity(data) {

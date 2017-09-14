@@ -17,6 +17,9 @@ module.exports = app => {
     //微信回调
     app.get('/wc/callback', 'wechat.wechat.callback');
 
+    //oss相关
+    app.all('file', '/api/v1/oss/list', 'api.oss.list');
+    app.all('sign', '/api/v1/oss/sign', 'api.oss.sign');
 
     //活动页面处理
     app.get('/activity/:id', app.controller.page.activity.index);
@@ -32,7 +35,7 @@ module.exports = app => {
 
     //const wechat = app.middlewares.wechat();
 
-    app.get('/app/:id', 'wechat.wechat.index');
+     // app.get('/app/:id', 'wechat.wechat.index');
 
     app.get('/home', app.controller.home.home.index);
 
@@ -42,14 +45,17 @@ module.exports = app => {
     app.get('/app/api/article/:id', app.controller.app.app.detail);
     app.get('/app(/.+)?', app.controller.app.app.index);
 
+
     app.post('/api/v1/user/login', 'user.user.login')
     app.post('/api/v1/user/register', 'user.user.register')
 
     app.post('/api/v1/user/logout', 'user.user.logout')
     app.get('/api/v1/user/info', 'user.user.userinfo')
 
-    app.get('/api/v1/activity/list', 'api.activity.list')
 
+    //后台活动api
+    app.get('/api/v1/activity/list', 'api.activity.list')
+    app.get('/api/v1/activity/get/:id', 'api.activity.get')
     app.post('/api/v1/activity/save', 'api.activity.save')
 
 

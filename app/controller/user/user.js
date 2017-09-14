@@ -30,15 +30,18 @@ module.exports = app => {
             query.equalTo("password", body.password);
 
 
-          yield  query.first().then(function (account) {
+            yield  query.first().then(function (account) {
 
                 if (account) {
                     ctx.session.accountId = account.id
                     ret.message = "登录成功"
-                    account.token='44444';
-                    ctx.session.uid = account.id
-                    ret.data=account;
+                    account.set('role', ['guest']);
 
+                    const token = app.jwt.sign(account, app.config.jwt.secret);
+
+                    account.set('token',token)
+                    ctx.session.uid = account.objectId
+                    ret.data = account;
 
 
                 } else {
@@ -47,12 +50,12 @@ module.exports = app => {
 
                 }
 
-            },function (e) {
+            }, function (e) {
                 ret.code = 10000
                 ret.message = e
 
             })
-            ctx.body=ret;
+            ctx.body = ret;
 
         }
 

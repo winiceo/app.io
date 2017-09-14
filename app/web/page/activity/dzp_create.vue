@@ -11,8 +11,7 @@
     </transition>
 
     <div class="but-group">
-      <el-button @click.native.prevent="handlePreview" v-show="preview">预览</el-button>
-      <el-button @click.native.prevent="handlePreStep" v-show="preStep">上一步</el-button>
+       <el-button @click.native.prevent="handlePreStep" v-show="preStep">上一步</el-button>
       <el-button @click.native.prevent="handleNextStep" v-show="nextStep" type="primary">下一步</el-button>
       <el-button @click.native.prevent="handlePublish" v-show="publish" type="primary">发布活动</el-button>
     </div>
@@ -48,7 +47,7 @@
             handleNextStep: function () {
                 //console.log('/app/dzp/create/step'+(this.step+1));
                 //this.$router.push({name: 'create_setp'+(this.step+1)});
-                this.$router.push({name: 'create_setp'+(this.step+1)})
+                this.$router.push({name: 'edit_step'+(this.step+1)})
 
                 var _this = this;
                 setTimeout(function () {

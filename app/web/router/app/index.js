@@ -38,9 +38,11 @@ import step2 from '@/page/activity/step2.vue'
 import step3 from '@/page/activity/step3.vue'
 import step4 from '@/page/activity/step4.vue'
 
-import SettingsDashboardSidebarNav from '@/page/settings/_dashboard-sidebar-nav'
-import SettingsDemo from '@/page/settings/demo'
-import SettingsDemo2 from '@/page/settings/demo2'
+import SettingsDashboardSidebarNav from '@/page/check/_dashboard-sidebar-nav'
+import Check from '@/page/check/list'
+import Manage from '@/page/check/manage'
+
+
 export const constantRouterMap = [
     { path: '/login', component: _import('dashboard/login'), hidden: true },
     //{ path: '/authredirect', component: _import('dashboard/authredirect'), hidden: true },
@@ -69,17 +71,18 @@ export const constantRouterMap = [
                         name: 'activity-dzp',
                         component: ActivityDzp
                     }, {
-                        path: 'dzp/create',
+
+                        path: 'dzp/edit/:id',
                         alias: '',
-                        name: 'dzp-create',
+                        name: 'dzp-edit',
                         component: DzpCreate,
 
                         children:[
-                            { path: ''  , name:'create_setp', component: step1  },
-                            { path: 'step1',name:'create_setp1', component: step1  },
-                            { path: 'step2',name:'create_setp2', component: step2  },
-                            { path: 'step3',name:'create_setp3', component: step3  },
-                            { path: 'step4',name:'create_setp4', component: step4  }
+                            { path: ''  , name:'edit_step', component: step1  },
+                            { path: 'step1',name:'edit_step1', component: step1  },
+                            { path: 'step2',name:'edit_step2', component: step2  },
+                            { path: 'step3',name:'edit_step3', component: step3  },
+                            { path: 'step4',name:'edit_step4', component: step4  }
                         ]
 
                     },
@@ -91,7 +94,7 @@ export const constantRouterMap = [
                 ]
             },
             {
-                path: 'settings',
+                path: 'check',
                 components: {
                     default: DashboardContent,
                     sidebarNav: SettingsDashboardSidebarNav
@@ -103,15 +106,15 @@ export const constantRouterMap = [
                 },
                 children: [
                     {
-                        path: 'demo',
+                        path: 'list',
                         alias: '',
-                        name: 'settings-demo',
-                        component: SettingsDemo
+                        name: 'check',
+                        component: Check
                     },
                     {
-                        path: 'demo2',
-                        name: 'settings-demo2',
-                        component: SettingsDemo2
+                        path: 'manager',
+                        name: 'manager',
+                        component: Manage
                     }
                 ]
             }

@@ -19,25 +19,32 @@ module.exports = app => {
          */
 
         * getResult(pageid) {
-            let page = yield app.redis.hget('pages', pageid);
+            let page = yield this.service.activity.get(pageid);
 
-            if (!page) {
-                app.logger.info('cache:page');
-                const query = new Parse.Query('activity');
-                page = yield query.get(pageid).then(function (page) {
-                    if (page) {
-                        return page.toJSON();
-                    }
-                    return null;
-
-                }, function (err) {
-                    app.logger.error(err);
-                    return null;
-                });
-
-                yield app.redis.hset('pages', pageid, page);
+            function getRandomIntInclusive(min, max) {
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
             }
-            return page;
+            const index=getRandomIntInclusive(0, page.awardList.length - 1)
+            let result = page.awardList[index]
+            result.index=index+1;
+            app.logger.info(result)
+            return result;
+        }
+
+        * drawsave(options) {
+
+            const Order = Parse.Object.extend('drawResult');
+            const order = new Order();
+
+            order.set('userId', options.userInfo.objectId);
+            order.set('activityId', options.activityId);
+            order.set('nickname', options.userInfo.nickname);
+            order.set('draw', options.result);
+            order.set('isCheck', 0);
+            return yield order.save();
+
         }
 
 

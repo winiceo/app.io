@@ -44,7 +44,7 @@ exports.cors = {
 };
 
 exports.mysql = {
-    enable: true,
+    enable: false,
     package: 'egg-mysql',
 };
 exports.wechat = {
