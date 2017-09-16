@@ -69,16 +69,19 @@ module.exports = app => {
 
             const path = ctx.request.query.path;
 
-            const ret = {
-                accessid: this.env.get('ALI_OSS_ID'),
-                host: this.env.get('ALI_OSS_HOST'),
-                policy: policyBase64,
-                signature,
-                expire: moment().add('seconds', 30).unix(),
-                dir: path + '/',
-                filename: Date.now(),
+            const ret ={
+                code:200,
+                data:{
+                    accessid: this.env.get('ALI_OSS_ID'),
+                    host: this.env.get('ALI_OSS_HOST'),
+                    policy: policyBase64,
+                    signature,
+                    expire: moment().add('seconds', 30).unix(),
+                    dir: path + '/',
+                    filename: Date.now(),
 
-            };
+                }
+            } ;
             ctx.body = ret;
         }
 

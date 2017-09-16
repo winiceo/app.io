@@ -37,7 +37,10 @@ module.exports = app => {
                     ret.message = "登录成功"
                     //account.set('role', ['guest','admin']);
 
-                    const token = app.jwt.sign(account, app.config.jwt.secret);
+                    const token = app.jwt.sign({
+                        accountId:account.id,
+                        team:account.get('team')
+                    }, app.config.jwt.secret,{expiresIn: '1d'});
 
                     account.set('token', token)
                     ctx.session.accountId = account.id
@@ -70,9 +73,52 @@ module.exports = app => {
         }
 
         * userinfo() {
-            const {ctx, service} = this;
+            const {ctx, service} = this; 
+            let ret = {
+                code: 200,
+                message: '',
+                data:{}
+            }
+            let token="";
+            var strToken=ctx.request.headers['authorization'].split(' ');
+            if(strToken.length==2){
+                token=strToken[1]
+            }else{
+                 token = ctx.query.token|| ctx.request.body.token  || ctx.request.headers['x-token'];
+  
+            }
+            let user=false;
+            try{
+                user = app.jwt.verify(token, app.config.jwt.secret) 
+            }catch(e){
+                 ret.code = 10001
+                 ret.message = "请重新登录" 
+            }
+            if(user){
+                var query = new Parse.Query("account");
+
+                yield  query.get(user.accountId).then(function (account) {
+
+                    if (account) {
+ 
+                        ret.data = account.toJSON();
 
 
+                    } else {
+                        ret.code = 10001
+                        ret.message = "用户不存在"
+
+                    }
+
+                }, function (e) {
+                ret.code = 10000
+                ret.message = e
+
+                })
+            }
+             
+ 
+            
 
 
             ctx.body = ret;
@@ -87,11 +133,11 @@ module.exports = app => {
             const ret = {
                 code: 200
             }
-            if (body.captcha !== ctx.session.captcha) {
-                ret.code = 50002;
-                ret.message = `验证码不正确`
-                ctx.body = ret;
-            } else {
+            // if (body.captcha !== ctx.session.captcha) {
+            //     ret.code = 50002;
+            //     ret.message = `${body.captcha}验证码不正确${ctx.session.captcha}`
+            //     return ctx.body = ret;
+            // }  
 
                 let query = new Parse.Query("account");
                 const options = {}
@@ -133,7 +179,7 @@ module.exports = app => {
                 })
 
                 ctx.body = ret;
-            }
+             
         }
 
 

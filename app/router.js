@@ -21,7 +21,7 @@ module.exports = app => {
 
     //oss相关
     app.all('file', '/api/v1/oss/list', 'api.oss.list');
-    app.all('sign', '/api/v1/oss/sign', 'api.oss.sign');
+    app.all('/api/v1/oss/sign', '/api/v1/oss/sign', 'api.oss.sign');
 
     //活动页面处理
     app.get('/activity/:id', app.controller.page.activity.index);
@@ -60,7 +60,7 @@ module.exports = app => {
     app.post('/api/v1/user/register', 'user.user.register')
     app.all('/api/v1/user/logout', 'user.user.logout')
 
-    app.get('/api/v1/user/info', 'user.user.userinfo')
+    app.all('/api/v1/user/info', 'user.user.userinfo')
 
 
     //后台活动api

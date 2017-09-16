@@ -6,12 +6,12 @@ exports.development = true;
 exports.session = true;
 
 exports.vue = {
-  enable: true,
+  enable: false,
   package: 'egg-view-vue'
 };
 
 exports.vuessr = {
-  enable: true,
+  enable: false,
   package: '../egg-view-vue-ssr'
 };
 exports.jwt = {
