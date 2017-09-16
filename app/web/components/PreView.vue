@@ -163,7 +163,7 @@ export default {
   },
   data () {
     return {
-      releaseUrl: config.baseUrl + '/activity/' + this.item.objectId + '',
+      releaseUrl: 'http://' + window.location.host + '/activity/' + this.item.objectId + '',
       title: this.item.name || '',
       description: this.item.description || '',
       qrcodeSize: 500

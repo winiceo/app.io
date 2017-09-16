@@ -18,10 +18,10 @@
     computed: {
       topNavActive () {
 
-        return this.$store.getters['dashboard/topNavActive']
+        return this.$store.getters.topNavActive
       },
       sidebarNavActive () {
-        return this.$store.getters['dashboard/sidebarNavActive']
+        return this.$store.getters.sidebarNavActive
       }
     }
   }

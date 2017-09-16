@@ -12,7 +12,7 @@
                     </template>
                     <!--user menu-->
                     <el-submenu class="ele-user-menu-item" index="user-menu">
-                        <template slot="title">{{userinfo.name}}<img src="@/asset/logo.png" alt="admin"></template>
+                        <template slot="title">{{userinfo.name}}<img src="~@/asset/logo.png" alt="admin"></template>
                         <el-menu-item index="user-menu-logout">注销</el-menu-item>
                     </el-submenu>
                 </el-menu>
@@ -84,10 +84,14 @@
             handleTopNavSelect (index) {
                 switch (index) {
                     case 'user-menu-logout': {
+                        this.$store.dispatch('logout').then((a) => {
 
-                        this.$store.dispatch('LogOut').then(() => {
-                            location.reload()// 为了重新实例化vue-router对象 避免bug
+                            location.reload()
+
+                        }).catch((error) => {
+
                         })
+
 //            this.$store.dispatch('authentication/clearAccessToken')
 //            this.$router.push({name: 'login'})
                         break
@@ -108,8 +112,7 @@
 
             },
             topNavActive () {
-
-                return this.$store.getters['dashboard/topNavActive']
+                return this.$store.getters.topNavActive
             }
         }
     }

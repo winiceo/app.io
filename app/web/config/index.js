@@ -14,6 +14,6 @@ module.exports = {
     crm:{
         name:"赏客优"
     },
-    baseUrl:'http://localhost:7001'
+    baseUrl:process.env.NODE_ENV === 'production'?'http://cms.71an.com':'http://localhost:7001'
 
 }

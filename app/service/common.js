@@ -15,9 +15,7 @@ module.exports = app => {
          */
         * checkUserInfo(page){
             const {ctx, service} = this;
-            page.cate='activity',
-                page.oauth='1',
-                page.scope='snsapi_base'
+
 
             const callbackUrl = app.config.appURL + `/${page.cate}/${page.objectId}`;
             const isLogin = yield service.wechat.checkAuth({url: callbackUrl, scop: 'snsapi_base'})
@@ -28,6 +26,34 @@ module.exports = app => {
             const userInfo = yield service.wechat.info(ctx.session.user_id);
             return userInfo;
 
+        }
+
+        * outh(callback,scope){
+            const {ctx, service} = this;
+            let userInfo = null;
+            if (ctx.session.user_id) {
+                userInfo = yield service.wechat.info(ctx.session.user_id);
+
+            }
+            console.log('session %s',ctx.session.user_id)
+            const ret={
+
+            }
+            if (userInfo == null || ctx.session.user_id == null) {
+                ctx.session.user_id = null;
+                const url = yield service.wechat.checkAuth({url:callback||ctx.request.href, scope: scope||'snsapi_userinfo'})
+
+                ret.url=url;
+
+
+            }else{
+                console.log('这回可以了吗')
+                ret.userInfo=userInfo
+            }
+            console.log('这回可以了吗222')
+
+            console.log(ret)
+            return ret;
         }
 
 

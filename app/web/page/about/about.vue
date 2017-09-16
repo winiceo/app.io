@@ -1,7 +1,8 @@
 <template>
   <layout>
     <img src="../../asset/images/logo.png"/>
-    <div> {{message}} </div>
+    <div> {{message}} </div>     <yd-button type="primary"  >Click Me!</yd-button>
+
     <div class="fontawesome"> {{message}} </div>
   </layout>
 </template>
@@ -17,15 +18,24 @@
 @import "about.css";
 
 </style>
-<script type="text/babel">
 
-  export default {
-    components: {},
-    computed: {},
-    methods: {},
-    mounted() {
+<script  >
 
+    import YDUI from 'vue-ydui';
+    import 'vue-ydui/dist/ydui.rem.css';
+    /* 使用px：import 'vue-ydui/dist/ydui.px.css'; */
+
+
+    export default {
+        name: 'dynamic',
+        data () {
+            return {
+                show: false
+            }
+        },
+        components: {
+            YDUI
+        }
     }
-  }
 </script>
 

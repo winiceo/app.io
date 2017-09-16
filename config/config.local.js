@@ -36,7 +36,7 @@ module.exports = app => {
   });
 
   exports.security = {
-      domainWhiteList,
+
       csrf:false
   };//{ domainWhiteList };
 

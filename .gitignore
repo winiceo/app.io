@@ -19,3 +19,6 @@ config/manifest.json
 app/view/*
 !app/view/layout.html
 !app/view/README.md
+
+client/dist
+client/node_modules

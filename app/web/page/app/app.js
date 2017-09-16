@@ -1,16 +1,11 @@
 import {sync} from 'vuex-router-sync';
-import store from 'store/ok';
+import store from 'store/app';
 import router from '@/router/app';
 import app from './app.vue';
 import App from 'app';
 import Layout from 'component/layout/app';
-
-import ElementUI from 'element-ui';
-//import 'normalize.css';
-
 import navMap from '@/config/navMap'
-
-
+import ElementUI from 'element-ui';
 import '@/asset/style/theme/index.css';
 import '@/asset/style/ext/ext.scss';
 
@@ -39,14 +34,14 @@ router.beforeEach((to, from, next) => {
     // track nav active
     for (let i = 0; i < navMap.length; i++) {
         if (to.name === navMap[i].location.name) {
-            store.dispatch('dashboard/topNavActive', i.toString())
-            store.dispatch('dashboard/sidebarNavActive', '0')
+            store.dispatch('topNavActive', i.toString())
+            store.dispatch('sidebarNavActive', '0')
             break
         }
         for (let j = 0; navMap[i].children && j < navMap[i].children.length; j++) {
             if (to.name === navMap[i].children[j].location.name) {
-                store.dispatch('dashboard/topNavActive', i.toString())
-                store.dispatch('dashboard/sidebarNavActive', j.toString())
+                store.dispatch('topNavActive', i.toString())
+                store.dispatch('sidebarNavActive', j.toString())
                 break
             }
         }

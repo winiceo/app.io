@@ -26,25 +26,17 @@ module.exports = app => {
             const query = querystring.stringify(options)
             const redirectUrl = `${app.config.baseUrl}/wc/callback?${query}`;
 
-            const userInfo = yield service.wechat.info(ctx.session.user_id);
-            if (!userInfo || !ctx.session.user_id) {
-                ctx.session.user_id = null;
+            const wechatClient = yield ctx.helper.oauthClient(function (err, client) {
+                if (err) {
+                    app.logger.error(err);
+                }
+                app.logger.info(client);
+            });
 
-                const wechatClient = yield ctx.helper.oauthClient(function (err, client) {
-                    if (err) {
-                        app.logger.error(err);
-                    }
-                    app.logger.info(client);
-                });
+            const url = wechatClient.getAuthorizeURL(redirectUrl, 'state', options.scope);
 
+            return url;
 
-                const url = wechatClient.getAuthorizeURL(redirectUrl, 'state', options.scop);
-
-                ctx.redirect(url);
-
-            } else {
-                return true;
-            }
 
         }
 
@@ -204,6 +196,37 @@ module.exports = app => {
         }
 
 
+        /**
+         * 获取当前用户信息
+         */
+        * infoByUnionid(unionid) {
+            let userInfo = yield app.redis.hget('unionids', unionid);
+            if (_.isEmpty(userInfo)) {
+                const userQuery = new Parse.Query('wechat_user');
+                userQuery.equalTo('unionid', unionid);
+                userInfo = yield userQuery.first().then(function (user) {
+                    if (user) {
+                        user.set('id', user.id);
+                        return user.toJSON();
+                    }
+                    return null;
+
+                }, function (err) {
+                    app.logger.error(err);
+                    return null;
+                });
+
+                if (userInfo) {
+                    yield app.redis.hset('users', userInfo.objectId, userInfo);
+                    yield app.redis.hset('unionids', unionid, userInfo.objectId);
+
+                    return userInfo;
+                }
+
+            } else {
+                return null;
+            }
+        }
         * getWechatConfig(url) {
             const api = this.ctx.helper.wechatApi();
             const param = {

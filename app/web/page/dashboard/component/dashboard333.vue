@@ -108,7 +108,7 @@
       },
       topNavActive () {
 
-        return this.$store.getters['dashboard/topNavActive']
+        return this.$store.getters.dashboard.topNavActive
       }
     }
   }

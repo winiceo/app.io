@@ -17,6 +17,8 @@ module.exports = app => {
     //微信回调
     app.get('/wc/callback', 'wechat.wechat.callback');
 
+    app.get('/captcha','api.common.captcha')
+
     //oss相关
     app.all('file', '/api/v1/oss/list', 'api.oss.list');
     app.all('sign', '/api/v1/oss/sign', 'api.oss.sign');
@@ -26,6 +28,11 @@ module.exports = app => {
 
     //文章类页面处理
     app.get('/pages/:id', app.controller.page.page.index);
+
+
+    //添加核销员
+    app.get('/check/manage/join/:id', app.controller.page.check.join);
+    app.get('/check/test', app.controller.page.check.test);
 
     //socket 相关
     // app.io.route('lottery', app.io.controllers.lottery);
@@ -45,11 +52,14 @@ module.exports = app => {
     app.get('/app/api/article/:id', app.controller.app.app.detail);
     app.get('/app(/.+)?', app.controller.app.app.index);
 
+    //用户中心
+    app.get('/uc(/.+)?', app.controller.uc.uc.index);
+
 
     app.post('/api/v1/user/login', 'user.user.login')
     app.post('/api/v1/user/register', 'user.user.register')
+    app.all('/api/v1/user/logout', 'user.user.logout')
 
-    app.post('/api/v1/user/logout', 'user.user.logout')
     app.get('/api/v1/user/info', 'user.user.userinfo')
 
 
@@ -57,6 +67,19 @@ module.exports = app => {
     app.get('/api/v1/activity/list', 'api.activity.list')
     app.get('/api/v1/activity/get/:id', 'api.activity.get')
     app.post('/api/v1/activity/save', 'api.activity.save')
+
+    //后台核销
+    app.get('/api/v1/draw/list', 'api.draw.list')
+
+    //核销管理员
+    app.get('/api/v1/check/list', 'api.check.list')
+    app.post('/api/v1/check/delete/:id', 'api.check.delete')
+
+    // app.get('/api/v1/activity/get/:id', 'api.activity.get')
+    // app.post('/api/v1/activity/save', 'api.activity.save')
+
+
+
 
 
 
@@ -76,7 +99,7 @@ module.exports = app => {
     // app.get('/await/element', app.controller.await.await.element);
     // app.get('/await/pager', app.controller.await.await.pager);
     //
-    // app.get('/about', app.controller.about.about.index);
+     app.get('/about', app.controller.about.about.index);
     // app.get('/router', app.controller.router.router.index);
     // app.get('/dynamic', app.controller.dynamic.dynamic.index);
     // app.get('/app/api/article/list', app.controller.app.app.list);
@@ -87,6 +110,6 @@ module.exports = app => {
     // app.get('/test', app.controller.test.test.index);
 
 
-    // app.get('/500', app.controller.home.error);
+    //app.get('/500', app.controller.home.error);
     //app.get('/404', app.controller.home.notFound);
 };

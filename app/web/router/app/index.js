@@ -1,24 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 const _import = require('./_import_' + process.env.NODE_ENV)
 // in development env not use Lazy Loading,because Lazy Loading too many pages will cause webpack hot update too slow.so only in production use Lazy Loading
 import navMap from '@/config/navMap'
 
 Vue.use(Router)
-
-
-
-
-
-/* layout */
-
-/**
- * icon : the icon show in the sidebar
- * hidden : if `hidden:true` will not show in the sidebar
- * redirect : if `redirect:noredirect` will no redirct in the levelbar
- * noDropdown : if `noDropdown:true` will has no submenu
- * meta : { role: ['admin'] }  will control the page role
- **/
 
 
 import DashboardContent from '@/page/dashboard/component/dashboard-content'
@@ -29,9 +16,14 @@ import Login from '@/page/dashboard/login'
 import HomeDashboardSidebarNav from '@/page/activity/_dashboard-sidebar-nav'
 
 
-import ActivityDzp from '@/page/activity/dzp'
-import DzpCreate from '@/page/activity/dzp_create'
-import ActivityZjd from '@/page/activity/zjd'
+//import ActivityDzp from '@/page/activity/dzp'
+
+const ActivityDzp = r => require.ensure([], () => r(require('@/page/activity/dzp')), 'chunkname1')
+
+const DzpCreate = r => require.ensure([], () => r(require('@/page/activity/dzp_create')), 'chunkname2')
+
+const ActivityZjd = r => require.ensure([], () => r(require('@/page/activity/zjd')), 'chunkname3')
+
 
 import step1 from '@/page/activity/step1.vue'
 import step2 from '@/page/activity/step2.vue'
@@ -44,10 +36,10 @@ import Manage from '@/page/check/manage'
 
 
 export const constantRouterMap = [
-    { path: '/login', component: _import('dashboard/login'), hidden: true },
+    {path: '/login', component: _import('dashboard/login'), hidden: true},
     //{ path: '/authredirect', component: _import('dashboard/authredirect'), hidden: true },
-    { path: '/404', component: _import('errorPage/404'), hidden: true },
-    { path: '/401', component: _import('errorPage/401'), hidden: true },
+    {path: '/404', component: _import('errorPage/404'), hidden: true},
+    {path: '/401', component: _import('errorPage/401'), hidden: true},
     {
         path: '/',
         component: Dashboard,
@@ -77,12 +69,12 @@ export const constantRouterMap = [
                         name: 'dzp-edit',
                         component: DzpCreate,
 
-                        children:[
-                            { path: ''  , name:'edit_step', component: step1  },
-                            { path: 'step1',name:'edit_step1', component: step1  },
-                            { path: 'step2',name:'edit_step2', component: step2  },
-                            { path: 'step3',name:'edit_step3', component: step3  },
-                            { path: 'step4',name:'edit_step4', component: step4  }
+                        children: [
+
+                            {path: 'step1', name: 'edit_step1', component: step1},
+                            {path: 'step2', name: 'edit_step2', component: step2},
+                            {path: 'step3', name: 'edit_step3', component: step3},
+                            {path: 'step4', name: 'edit_step4', component: step4}
                         ]
 
                     },
@@ -108,7 +100,7 @@ export const constantRouterMap = [
                     {
                         path: 'list',
                         alias: '',
-                        name: 'check',
+                        name: 'list',
                         component: Check
                     },
                     {
@@ -245,7 +237,7 @@ export default new Router({
 
     // scrollBehavior: () => ({ y: 0 }),
     mode: 'history',
-    base:'/app',
+    base: '/app',
     routes: constantRouterMap
 })
 
@@ -368,5 +360,5 @@ export const asyncRouterMap = [
     //   children: [{ path: 'index', component: _import('theme/index'), name: '换肤' }]
     // },
 
-    { path: '*', redirect: '/404', hidden: true }
+    {path: '*', redirect: '/404', hidden: true}
 ]

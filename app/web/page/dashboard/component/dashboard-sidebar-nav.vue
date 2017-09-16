@@ -13,7 +13,7 @@
       active: {
         get () {
 
-          return this.$store.getters['dashboard/sidebarNavActive']
+          return this.$store.getters.sidebarNavActive
         }
       }
     },

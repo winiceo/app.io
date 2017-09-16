@@ -65,7 +65,7 @@ module.exports = app => {
 
             app.logger.info(this.session)
             //this.ctx.session.user_id=null
-            yield this.ctx.render('page/500.html');
+            yield this.ctx.render('genv/page/500.html');
         }
 
 

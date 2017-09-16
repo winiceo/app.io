@@ -17,7 +17,7 @@ var quillEditor = {
         }
         Vue.directive('quill', {
             inserted: function (el, binding, vnode) {
-                console.log(binding.value)
+                console.log([el,binding])
                 var _this = vnode.context
                 var instanceName = getInstanceName(el, binding, vnode)
                 var options = binding.value || {}

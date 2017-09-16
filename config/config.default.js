@@ -89,7 +89,7 @@ module.exports = appInfo => {
             // },
 
 
-            middleware: ['savesession'],
+            middleware: ['errorHandler','savesession'],
             errorHandler: {
                 // 非 `/api/` 路径不在这里做错误处理，留给默认的 onerror 插件统一处理
                 match: '/api',

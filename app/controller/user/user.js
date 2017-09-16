@@ -33,14 +33,16 @@ module.exports = app => {
             yield  query.first().then(function (account) {
 
                 if (account) {
-                    ctx.session.accountId = account.id
+
                     ret.message = "登录成功"
-                    account.set('role', ['guest']);
+                    //account.set('role', ['guest','admin']);
 
                     const token = app.jwt.sign(account, app.config.jwt.secret);
 
-                    account.set('token',token)
-                    ctx.session.uid = account.objectId
+                    account.set('token', token)
+                    ctx.session.accountId = account.id
+                    ctx.session.uid = account.id
+                    ctx.session.team = account.get('team')
                     ret.data = account;
 
 
@@ -61,66 +63,16 @@ module.exports = app => {
 
         * logout() {
             const {ctx, service} = this;
-
-            const ret = {
-                "code": 200,
-                "message": '',
-                "data": {
-                    'role': 'admin',
-                    "token": '333',
-                    "userinfo": {
-                        "id": 755,
-                        "pid": 78,
-                        "username": "test",
-                        "email": "",
-                        "sex": "3",
-                        "status": 1,
-                        "create_time": "2017-05-08 08:40:48",
-                        "birthday": "1992-11-05",
-                        "address": "",
-                        "token": "82676b532d8d593aaadd2f066c8d49d4",
-                        "access_status": 2,
-                        "web_routers": "",
-                        "api_routers": "",
-                        "default_web_routers": "",
-                        "is_update_pass": 1
-                    }
-                }
-            }
-
-
-            ctx.body = ret;
+            ctx.cookies.set('token', null);
+            ctx.cookies.set('roles', null);
+            ctx.cookies.set('team', null);
+            ctx.body = {code: 200, data: {}};
         }
 
         * userinfo() {
             const {ctx, service} = this;
 
-            const ret = {
-                "code": 200,
-                "message": '',
-                "data": {
-                    'role': 'admin',
-                    "token": '333',
-                    "name": 'leven',
-                    "userinfo": {
-                        "id": 755,
-                        "pid": 78,
-                        "username": "test",
-                        "email": "",
-                        "sex": "3",
-                        "status": 1,
-                        "create_time": "2017-05-08 08:40:48",
-                        "birthday": "1992-11-05",
-                        "address": "",
-                        "token": "82676b532d8d593aaadd2f066c8d49d4",
-                        "access_status": 2,
-                        "web_routers": "",
-                        "api_routers": "",
-                        "default_web_routers": "",
-                        "is_update_pass": 1
-                    }
-                }
-            }
+
 
 
             ctx.body = ret;
@@ -135,41 +87,53 @@ module.exports = app => {
             const ret = {
                 code: 200
             }
+            if (body.captcha !== ctx.session.captcha) {
+                ret.code = 50002;
+                ret.message = `验证码不正确`
+                ctx.body = ret;
+            } else {
 
-            let query = new Parse.Query("account");
-            query.equalTo("username", body.username);
-            yield query.first().then(function (account) {
+                let query = new Parse.Query("account");
+                const options = {}
+                query.equalTo("username", body.username);
+                yield query.first().then(function (account) {
 
-                if (!account) {
-                    let Account = Parse.Object.extend("account");
+                    if (!account) {
+                        let Account = Parse.Object.extend("account");
 
-                    account = new Account();
-                    account.set("username", body.username)
-                    account.set("password", body.password)
-                    account.set("role", "guest")
+                        account = new Account();
+                        account.set("username", body.username)
+                        account.set("password", body.password)
+                        account.set("roles", ["guest", 'store'])
 
-                    return account.save()
-                } else {
-                    return Parse.Promise.error("此手机号已注册");
+                        return account.save()
+                    } else {
+                        return Parse.Promise.error("此用户已存在");
 
-                }
-            }).then(function (account) {
+                    }
+                }).then(function (account) {
+                    options.account = account;
+                    ctx.session.uid = account.id
+                    ret.message = "注册成功"
+                    const Team = Parse.Object.extend('team');
+                    const team = new Team();
+                    team.set('account', account.id);
+                    return team.save();
 
+                }).then(function (team) {
+                    options.account.set('team', team.id)
+                    return options.account.save()
+                }, function (error) {
 
-                ctx.session.uid = account.id
-                ret.message = "注册成功"
+                    ret.code = 50001;
+                    ret.message = error
 
+                }).then(function () {
+                    "use strict";
+                })
 
-            }, function (error) {
-
-                ret.error = 50001;
-                ret.message = error
-
-            }).then(function () {
-                "use strict";
-
-            })
-            ctx.body = ret;
+                ctx.body = ret;
+            }
         }
 
 

@@ -13,7 +13,7 @@
 
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
 
-      <router-link :to="{path: 'dzp/edit/0'}" tag="span">
+      <router-link :to="{path: 'dzp/edit/0/step1'}" tag="span">
         <el-button class="filter-item" style="margin-left: 10px;"   type="primary" icon="edit">创建活动</el-button>
       </router-link>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">添加</el-button>
@@ -132,7 +132,7 @@
 </template>
 
 <script>
-    import { fetchList, fetchPv } from '@/api/activity'
+    import  * as api from '@/api/activity'
     import waves from '@/framework/vue/directive/waves.js'// 水波纹指令
     import { parseTime } from '@/utils'
     import PreView from '@/components/PreView'
@@ -223,9 +223,10 @@
             },
             getList() {
                 this.listLoading = true
-                fetchList(this.listQuery).then(response => {
-                    this.list = response.data.items
-                    this.total = response.data.total
+                api.query(this.listQuery).then(data => {
+
+                    this.list = data.items
+                    this.total = data.total
                     this.listLoading = false
                 })
             },
@@ -290,7 +291,7 @@
                 })
             },
             update(item) {
-                this.$router.push({ path: 'dzp/edit/'+item.objectId })
+                this.$router.push({ path: 'dzp/edit/'+item.objectId+'/step1' })
             },
             delete(item){
 

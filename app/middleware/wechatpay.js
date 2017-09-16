@@ -18,8 +18,6 @@ module.exports = (options, app) => {
     notifyUrl: env.get('BASE_URL')+'/api/pay/notify',
     pfx: fs.readFileSync(app.config.certpfx),
   };
-
-
   const wxpay = new wechatPay(initConfig);
 
   return wxpay;

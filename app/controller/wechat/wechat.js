@@ -27,28 +27,28 @@ module.exports = app => {
         /**
          * 微信客户端首页
          */
-        * index() {
-
-            const {ctx, service} = this;
-            const bpwall_id = ctx.params.id;
-
-            const callbackUrl = app.config.appURL + `/app/${bpwall_id}`;
-            const isLogin = yield service.wechat.checkAuth({url: callbackUrl, scop: 'snsapi_base'})
-
-            if (isLogin !== true) {
-                return;
-            }
-            const userInfo = yield service.wechat.info(ctx.session.user_id);
-
-
-            // yield service.user.fansToWall(bpwall_id, userInfo.objectId)
-            //
-            // const options = yield service.wechat.index(bpwall_id);
-
-
-            yield ctx.render('test/dzp.html', {userInfo});
-
-        }
+        // * index() {
+        //
+        //     const {ctx, service} = this;
+        //     const bpwall_id = ctx.params.id;
+        //
+        //     const callbackUrl = app.config.appURL + `/app/${bpwall_id}`;
+        //     const isLogin = yield service.wechat.checkAuth({url: callbackUrl, scop: 'snsapi_base'})
+        //
+        //     if (isLogin !== true) {
+        //         return;
+        //     }
+        //     const userInfo = yield service.wechat.info(ctx.session.user_id);
+        //
+        //
+        //     // yield service.user.fansToWall(bpwall_id, userInfo.objectId)
+        //     //
+        //     // const options = yield service.wechat.index(bpwall_id);
+        //
+        //
+        //     yield ctx.render('test/dzp.html', {userInfo});
+        //
+        // }
 
 
         /**
@@ -76,6 +76,8 @@ module.exports = app => {
                     wuser.expires_in = result.data.expires_in;
                     wuser.refresh_token = result.data.refresh_token;
                     wuser.scope = result.data.scope;
+
+                    console.log(wuser)
 
                     wechatUser = wuser;
                     promise.resolve();

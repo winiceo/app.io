@@ -1,8 +1,8 @@
 import axios from 'axios'
 import {Message} from 'element-ui'
-import store from '@/store/cms'
+import store from '@/store/app'
 import config from '@/config'
-import {getToken} from '@/utils/auth'
+import * as cache from '@/utils/cache'
 
 
 axios.defaults.timeout = 5000; //5000的超时验证
@@ -23,13 +23,14 @@ fetch.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 // request拦截器
 fetch.interceptors.request.use(config => {
     // Do something before request is sent
-    //console.log(store.getters.token())
-    // if (store.getters.token) {
-    //
-    //     config.headers.Authorization = `token ${getToken()}`;
-    //
-    //     config.headers['X-Token'] = getToken() // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
-    // }
+    var token=cache.get('token')
+
+    if (token) {
+
+        config.headers.Authorization = `token ${token}`;
+
+        config.headers['X-Token'] = token // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
+    }
     return config
 }, error => {
     // Do something with request error
@@ -81,7 +82,7 @@ fetch.interceptors.response.use(
 )
 
 
-function _get(url, params) {
+export const get = (url, params)=>{
 
 
     const promise = fetch.get(url, {params: params});
@@ -94,7 +95,7 @@ function _get(url, params) {
     })
 };
 
-function _post(url, params) {
+export const post =(url, params) =>{
 
     return new Promise((resolve, reject) => {
         fetch.post(url, params)
@@ -104,13 +105,8 @@ function _post(url, params) {
                 reject(err);
             })
             .catch((error) => {
-            alert(error)
+
                 reject(error)
             })
     })
-
-
 }
-
-
-export  {fetch, _get, _post}

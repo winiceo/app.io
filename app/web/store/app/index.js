@@ -1,21 +1,25 @@
-'use strict';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import * as actions from './actions'
-import * as getters from './getters'
-import mutations from './mutations'
-
 Vue.use(Vuex);
 
-const state = {
-  articleList: [],
-  article: {}
-};
+import activity from './activity/';
+import user from './user/';
+import check from './check'
+
+import app from './common/app'
+
+import permission from './common/permission'
+import dashboard from './dashboard'
 
 export default new Vuex.Store({
-  state,
-  actions,
-  getters,
-  mutations
+    modules: {
+        activity,
+        user,
+        app,
+        permission,
+        dashboard,
+        check
+
+    }
 });

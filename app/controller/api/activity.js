@@ -48,6 +48,7 @@ module.exports = app => {
             if (cate != "") {
                 query.equalTo('cate', cate);
             }
+            query.equalTo('team',ctx.session.team );
 
 
             query.limit(limit);
@@ -107,6 +108,7 @@ module.exports = app => {
             }
 
             activity.set('uid',ctx.session.uid );
+            activity.set('team',ctx.session.team );
             activity.set('status',"draft" );
             activity.set(body);
 

@@ -1,22 +1,16 @@
-import {fetch,_get} from '@/utils/fetch'
+import * as http from '@/utils/fetch'
 
-export function fetchList(query) {
-  return fetch({
-    url: '/activity/list',
-    method: 'get',
-    params: query
-  })
+export function query(query) {
+  return http.get('/activity/list',query)
+
 }
 
-export function getActivity(id) {
-  return _get('/activity/get/'+id)
+export function get(id) {
+  return http.get('/activity/get/'+id)
 }
 
-export function createActivity(data) {
-  return fetch({
-    url: '/activity/save',
-    method: 'post',
-    data: data
-  })
+export function create(data) {
+  return http.post('/activity/save',data)
+
 }
 

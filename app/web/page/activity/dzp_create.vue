@@ -64,7 +64,8 @@
 
                      this.$router.push({name: 'activity-dzp'})
                     // this.showDialog = true
-                }).catch(() => {
+                }).catch((e) => {
+                    //alert(e)
                  })
             },
             goStep: function (n) {

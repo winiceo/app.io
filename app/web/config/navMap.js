@@ -19,12 +19,12 @@ export default [
     {
         text: '核销管理',
         icon: 'el-icon-star-on',
-        location: {name: 'check'},
+        location: {name: 'list'},
         children: [
             {
                 text: '核销管理',
                 icon: 'el-icon-star-on',
-                location: {name: 'check'}
+                location: {name: 'list'}
             },
             {
                 text: '核销员管理',
