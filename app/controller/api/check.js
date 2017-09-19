@@ -11,7 +11,7 @@ module.exports = app => {
 
         * list() {
             const {ctx, service} = this;
-            const team = ctx.session.team;
+            const team = ctx.user.team;
             console.log(ctx.session)
             const ret = {
                 code: 200,

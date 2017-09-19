@@ -271,6 +271,8 @@ module.exports = app => {
             const promise = new Parse.Promise();
 
             api.getJsConfig(param, function (err, data) {
+                console.log(err)
+                 console.log(data)
                 if (err) promise.reject(err);
                 promise.resolve(data);
             });

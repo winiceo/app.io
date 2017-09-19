@@ -38,25 +38,31 @@ module.exports = app => {
                     //account.set('role', ['guest','admin']);
 
                     const token = app.jwt.sign({
-                        accountId:account.id,
-                        team:account.get('team')
-                    }, app.config.jwt.secret,{expiresIn: '1d'});
+                        accountId: account.id,
+                        team: account.get('team')
+                    }, app.config.jwt.secret, {expiresIn: '1d'});
 
                     account.set('token', token)
+                    account.set('access_status',2)
+                    account.set('api_routers','')
+                    account.set('web_routers','')
+                     account.set('userinfo',account.toJSON())
+
                     ctx.session.accountId = account.id
                     ctx.session.uid = account.id
                     ctx.session.team = account.get('team')
-                    ret.data = account;
+                    // ret.data = account;
+                    ret.data=account;
 
 
                 } else {
-                    ret.code = 10001
+                    ret.code = 10010
                     ret.message = "登录失败，请检查手机号或者密码是否正确"
 
                 }
 
             }, function (e) {
-                ret.code = 10000
+                ret.code = 10002
                 ret.message = e
 
             })
@@ -73,52 +79,32 @@ module.exports = app => {
         }
 
         * userinfo() {
-            const {ctx, service} = this; 
+            const {ctx, service} = this;
             let ret = {
                 code: 200,
                 message: '',
-                data:{}
+                data: {}
             }
-            let token="";
-            var strToken=ctx.request.headers['authorization'].split(' ');
-            if(strToken.length==2){
-                token=strToken[1]
-            }else{
-                 token = ctx.query.token|| ctx.request.body.token  || ctx.request.headers['x-token'];
-  
-            }
-            let user=false;
-            try{
-                user = app.jwt.verify(token, app.config.jwt.secret) 
-            }catch(e){
-                 ret.code = 10001
-                 ret.message = "请重新登录" 
-            }
-            if(user){
-                var query = new Parse.Query("account");
+            const user=ctx.user;
+            var query = new Parse.Query("account");
+            yield  query.get(user.accountId).then(function (account) {
 
-                yield  query.get(user.accountId).then(function (account) {
+                if (account) {
 
-                    if (account) {
- 
-                        ret.data = account.toJSON();
+                    ret.data = account.toJSON();
 
 
-                    } else {
-                        ret.code = 10001
-                        ret.message = "用户不存在"
+                } else {
+                    ret.code = 10001
+                    ret.message = "用户不存在"
 
-                    }
+                }
 
-                }, function (e) {
-                ret.code = 10000
+            }, function (e) {
+                ret.code = 10002
                 ret.message = e
 
-                })
-            }
-             
- 
-            
+            })
 
 
             ctx.body = ret;
@@ -139,48 +125,84 @@ module.exports = app => {
             //     return ctx.body = ret;
             // }  
 
-                let query = new Parse.Query("account");
-                const options = {}
-                query.equalTo("username", body.username);
-                yield query.first().then(function (account) {
+            let query = new Parse.Query("account");
+            const options = {}
+            query.equalTo("username", body.username);
+            yield query.first().then(function (account) {
 
-                    if (!account) {
-                        let Account = Parse.Object.extend("account");
+                if (!account) {
+                    let Account = Parse.Object.extend("account");
 
-                        account = new Account();
-                        account.set("username", body.username)
-                        account.set("password", body.password)
-                        account.set("roles", ["guest", 'store'])
+                    account = new Account();
+                    account.set("username", body.username)
+                    account.set("password", body.password)
+                    account.set("roles", ["guest", 'store'])
 
-                        return account.save()
-                    } else {
-                        return Parse.Promise.error("此用户已存在");
+                    return account.save()
+                } else {
+                    return Parse.Promise.error("此用户已存在");
 
-                    }
-                }).then(function (account) {
-                    options.account = account;
-                    ctx.session.uid = account.id
-                    ret.message = "注册成功"
-                    const Team = Parse.Object.extend('team');
-                    const team = new Team();
-                    team.set('account', account.id);
-                    return team.save();
+                }
+            }).then(function (account) {
+                options.account = account;
+                ctx.session.uid = account.id
+                ret.message = "注册成功"
+                const Team = Parse.Object.extend('team');
+                const team = new Team();
+                team.set('account', account.id);
+                return team.save();
 
-                }).then(function (team) {
-                    options.account.set('team', team.id)
-                    return options.account.save()
-                }, function (error) {
+            }).then(function (team) {
+                options.account.set('team', team.id)
+                return options.account.save()
+            }, function (error) {
 
-                    ret.code = 50001;
-                    ret.message = error
+                ret.code = 10002;
+                ret.message = error
 
-                }).then(function () {
-                    "use strict";
-                })
+            }).then(function () {
+                "use strict";
+            })
 
-                ctx.body = ret;
-             
+            ctx.body = ret;
+
         }
+
+        * resetpwd() {
+            const {ctx, service} = this;
+              const body = ctx.request.body;
+            let ret = {
+                code: 200,
+                message: '',
+                data: {}
+            }
+            const user=ctx.user;
+            var query = new Parse.Query("account");
+
+            yield  query.get(user.accountId).then(function (account) {
+
+                if (account) {
+
+                    account.set('password',body.password)
+                    return account.save();
+
+
+                } else {
+                    ret.code = 10001
+                    ret.message = "用户不存在"
+
+                }
+
+            }, function (e) {
+                ret.code = 10002
+                ret.message = e
+
+            })
+
+
+            ctx.body = ret;
+        }
+
 
 
     }

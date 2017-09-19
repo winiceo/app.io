@@ -168,10 +168,10 @@
     <img class="bg_img" id="i_bg" src="{{config.cdn}}/Public/z0{{config.type}}.png">
     <img class="cont_img" id="i_cont" src="{{config.cdn}}/Public/activity-lottery-2.png">
 </div>
-<div class="title">当前还剩下 <font color="yellow" id="startpopular">30</font> 次抽奖机会</div>
+<!--<div class="title">当前还剩下 <font color="yellow" id="startpopular">30</font> 次抽奖机会</div>-->
 <div class="showbox">
 
-    {{page.activeDescribe|safe}}
+    {{activity.activeDescribe|safe}}
 
 </div>
 <div class="title" id="prizeBox">活动奖品</div>
@@ -179,11 +179,11 @@
 
 <div class="showbox" id="prizebox1">
 
-    {% for item in page.awardList %}
+    {% for item in activity.awardList %}
     <div class="prizebox1">
         <span class="plevel">{{item.grade}}：</span>
-        <span class="pname">{{item.name}}</span>
-        <span class="pstate2">{{item.num}}</span>
+        <span class="pname">{{item.title}}</span>
+        <span class="pstate2">{{item.total}}</span>
     </div>
     {% endfor %}
 
@@ -268,7 +268,7 @@
         <p class="gift_award">价值100元礼品</p>
     </div>
     <div class="gift_follow">
-        <a class="openbtn" id="closebtn3" href="#prizeBox">领取奖品</a>
+        <a class="openbtn" id="closebtn3"  >领取奖品</a>
     </div>
 </div>
 
@@ -302,7 +302,7 @@
 <script>
     var currentPage = 1;
     var pageCount = 0;
-    var Activity={{page|dump|safe}}
+    var Activity={{activity|dump|safe}}
 
     function showList() {
         $.ajax({
@@ -630,7 +630,7 @@
                     if (rotate.flag_click) {
                         $.ajax({
                             type: 'POST',
-                            url: "/lottery/draw",
+                            url: "/lottery/draw/"+Activity.objectId,
                             data: {userstate: userstate,activityid:Activity.objectId},
                             success: function (data) {
                                 event.preventDefault();
@@ -645,7 +645,7 @@
 
                                         var phtml2 = '<div class="prizebox2"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td><img src="' + data.headimgurl + '" width="40" class="headimgurl"></td><td><p class="nickname">' + data.nickname + '获得了' + data.plevel + '</p><p class="time">中奖时间：' + data.time + '</p></td></tr></table></div><div class="fgx"></div>'
 
-                                        $("#prizebox1").prepend(phtml1);
+                                       // $("#prizebox1").prepend(phtml1);
                                         $("#prizebox2").prepend(phtml2);
                                     }
                                     var result_angle = getrate(result);
@@ -698,6 +698,7 @@
 
         $("#closebtn3").click(function () {
             $("#gift").hide();
+            window.location.href='/usercenter/index'
         });
 
         $("#closebtn4").click(function () {

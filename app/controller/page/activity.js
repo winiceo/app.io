@@ -10,7 +10,7 @@ module.exports = app => {
 
             console.log(Auth);
             if(Auth.url){
-               return   ctx.redirect(Auth.url)
+              return   ctx.redirect(Auth.url)
             }
             console.log(Auth.userInfo)
 
@@ -20,21 +20,21 @@ module.exports = app => {
                 // page.cate='activity'
                 // page.oauth='1'
                 // page.scope='snsapi_base'
-            console.log(activity)
-            console.log(ctx.session)
-
-            console.log(ctx.session.user_id)
-
-           // // 检测是否需要处理微信用户信息
+            console.log(JSON.stringify(activity))
+           //  console.log(ctx.session)
            //
-           //    ctx.redirect(userInfo)
+           //  console.log(ctx.session.user_id)
            //
-            const token = app.jwt.sign({ _uid: 3333 }, app.config.jwt.secret);
-           //
+           // // // 检测是否需要处理微信用户信息
+           // //
+           // //    ctx.redirect(userInfo)
+           // //
+           //  const token = app.jwt.sign({ _uid: 3333 }, app.config.jwt.secret);
+           // //
             const config={
                 cdn:'/public/addons/dzp3',
                 page:JSON.stringify(activity),
-                token:token,
+
                 type:activity.awardList?activity.awardList.length:2,
             }
            // var tt='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfdWlkIjoiMTIzNDU2IiwiaWF0IjoxNTA1MTgyNzE1fQ.-NJ9JTB_CfsWXus_fPnOsm1frFMEAtr7-6quDps0idI';

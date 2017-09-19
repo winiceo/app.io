@@ -23,7 +23,11 @@ module.exports = app => {
             if (!page) {
                 app.logger.info('cache:activitys');
                 const query = new Parse.Query('activity');
-                page = yield query.get(pageid).then(function (page) {
+                query.equalTo("objectId", pageid);
+                //query.include("award");
+                page = yield query.first().then(function (page) {
+
+
                     if (page) {
                         return page.toJSON();
                     }
@@ -36,9 +40,36 @@ module.exports = app => {
 
                 yield app.redis.hset('activitys', pageid, page);
             }
+            page.awardList=yield this.getAward(pageid)
             return page;
         }
 
+        * getAward(id) {
+
+
+            const Activity = Parse.Object.extend('activity');
+            const activity = new Activity();
+            activity.id = id;
+            const relation = activity.relation('award');
+            const query = relation.query();
+            query.ascending('sort');
+            return  yield query.find().then(function (awards) {
+                if (awards) {
+                    const tmps = [];
+                    _.each(awards, function (n) {
+                        tmps.push(n.toJSON());
+                    });
+                    return tmps;
+                }
+                return null;
+
+            }, function (err) {
+
+                return null;
+            });
+
+
+        }
 
 
     }

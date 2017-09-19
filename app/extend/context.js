@@ -2,7 +2,8 @@
 
 module.exports = {
     get isXHR() {
-        return this.get('X-Requested-With') === 'XMLHttpRequest';
+
+        return this.request.get('X-Requested-With') === 'XMLHttpRequest';
     },
     success(params) {
        return this.render('genv/common/message.html',params)

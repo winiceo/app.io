@@ -48,7 +48,8 @@ module.exports = app => {
             if (cate != "") {
                 query.equalTo('cate', cate);
             }
-            query.equalTo('team',ctx.session.team );
+            query.equalTo('team',ctx.user.team );
+            query.notEqualTo('status','deleted' );
 
 
             query.limit(limit);
@@ -90,29 +91,54 @@ module.exports = app => {
                 code:200,
                 data:{}
             };
-
-
-
-            console.log(ctx.session.uid)
             const Activity = Parse.Object.extend('activity');
+            const Award = Parse.Object.extend('award');
             const activity = new Activity();
 
 
             if (body.objectId) {
                 activity.id = body.objectId
+
                 yield app.redis.hdel('activitys', activity.id,function(e,b){
                     console.log([e,b])
                 });
             }else{
-
+                activity.set('accountId',ctx.user.accountId );
+                activity.set('team',ctx.user.team );
+                activity.set('status',"draft" );
             }
 
-            activity.set('uid',ctx.session.uid );
-            activity.set('team',ctx.session.team );
-            activity.set('status',"draft" );
-            activity.set(body);
+             // yield activity.save().then(function(activity){
+             //     var query = new Parse.Query(Award);
+             //     query.equalTo("activity", activity);
+             //
+             // });
+            const relation = activity.relation('award');
+            // relation.remove(activity)
+            // yield activity.save();
 
-            ret.data=yield activity.save();
+            const awards=[]
+            _.each(body.awardList, function (item) {
+                item.num=parseInt(item.num)
+                item.total=parseInt(item.total)
+                const award = new Award(item);
+                awards.push(award);
+            });
+            yield Parse.Object.saveAll(awards).then(function (result) {
+                result.map(r => {
+                    relation.add(r);
+                });
+                delete(body.awardList)
+                activity.set(body);
+                return activity.save();
+
+            }).then(function(activity){
+                ret.data=activity
+            },function(e){
+                ret.code="10001"
+                ret.message=e;
+            });
+
             ctx.body=ret;
         }
 
@@ -125,6 +151,65 @@ module.exports = app => {
             };
             ctx.body=ret;
         }
+
+        * destoryActivity(){
+            const {ctx, service} = this;
+            const pageid = ctx.params.id;
+            const query = new Parse.Query('activity');
+            query.equalTo("objectId", pageid);
+            const ret = {
+                code:200,
+            };
+            yield query.first().then(function (page) {
+
+
+                if (page) {
+                    if(page.get('team')==ctx.user.team){
+                        page.set('status','deleted')
+                        return page.save();
+                    }else{
+                        ret.code=10020
+                        ret.message='没有权限操作'
+                    }
+                }
+                ret.code=10030
+                ret.message='活动不在存'
+
+
+            }, function (err) {
+                ret.code=10040
+                ret.message='操作错误'
+                app.logger.error(err);
+                return null;
+            });
+            ctx.body=ret;
+
+        }
+
+        * destroyAward(){
+            const {ctx, service} = this;
+            const awardid = ctx.params.id;
+            const ret = {
+                code:200,
+
+            };
+            const Award = Parse.Object.extend('award');
+            const award=new Award();
+            award.id=awardid
+            yield award.destroy({
+                success: function(myObject) {
+                    // The object was deleted from the Parse Cloud.
+                },
+                error: function(myObject, error) {
+                   ret.message='奖品错误'
+                }
+            });
+
+
+
+            ctx.body=ret;
+        }
+
 
 
     }

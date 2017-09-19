@@ -23,7 +23,8 @@ module.exports = app => {
             const page = parseInt(params.page) || 1;
             let limit = parseInt(params.limit) || 20;
             const status = parseInt(params.status) ||'';
-            const title = parseInt(params.title) || '';
+            const title = (params.title) || '';
+            const nickname = (params.nickname) || '';
 
             if(limit>100){
                 limit=100;
@@ -41,11 +42,24 @@ module.exports = app => {
             if (status != "") {
                 query.equalTo('status', status);
             }
+            console.log(title)
+            if (title != "") {
+                query.contains('draw.title', title);
+            }
 
+            if (nickname != "") {
+                query.contains('nickname', nickname);
+            }
+            query.equalTo('team', ctx.user.team);
 
             query.limit(limit);
             query.skip(limit * (page-1));
-            query.descending('createdAt');// 先进先出，正序排列
+            if(params.sort=="+id"){
+                 query.descending('createdAt');// 先进先出，正序排列
+
+             }else{
+            query.ascending('createdAt');
+             }
 
 
             //app.logge.info(limit)
@@ -61,6 +75,7 @@ module.exports = app => {
                     const item = n.toJSON();
 
                     item.createdAt = ctx.helper.dateAt(n.createdAt, 'YYYY/MM/DD');
+                    //item.checkTime = ctx.helper.date(n.checkTime, 'YYYY/MM/DD');
                     temp.push(item);
                 });
 
@@ -116,6 +131,80 @@ module.exports = app => {
             };
             ctx.body=ret;
         }
+         //后台核销   
+         * check(){
+            const {ctx, service} = this;
+            const objectId = ctx.params.id;
+             const body = ctx.request.body;
+            const ret = {
+                code:200 
+            };
+
+
+            const query = new Parse.Query('drawResult');
+                query.equalTo("objectId", objectId);
+                //query.include("award");
+                yield query.first().then(function (page) {
+
+
+                    if (page) {
+                        page.set('remark',body.remark)
+                        page.set('status',1)
+                        page.set('checkTime',moment().format("YYYY-MM-DD:HH:mm"))
+                        return page.save();
+                    }
+                    return null;
+
+                }, function (err) {
+
+                    return null;
+                });
+            ctx.body=ret;
+        }
+
+         //前台核销   
+         * checkFront(){
+            const {ctx, service} = this;
+            const objectId = ctx.params.id;
+            const body = ctx.request.body;
+            const ret = {
+                code:200 
+            };
+              
+            if(!ctx.session.check_unionid){
+                ret.code=20001
+                ret.message='无权缲作'
+                return ctx.body=ret;
+            }
+
+
+            const query = new Parse.Query('drawResult');
+                query.equalTo("objectId", objectId);
+                query.equalTo("team", ctx.session.check_team);
+                //query.include("award");
+                yield query.first().then(function (page) {
+
+
+                    if (page) {
+                        page.set('remark',body.remark)
+                        page.set('status',1)
+                        page.set('checkTime',moment().format("YYYY-MM-DD:HH:mm"))
+                        return page.save();
+                    }
+                    return null;
+
+                }, function (err) {
+
+                    return null;
+                });
+                if(!query){
+                    ret.code=20001
+                    ret.message='无权缲作' 
+                
+                }
+            ctx.body=ret;
+        }
+
 
 
     }

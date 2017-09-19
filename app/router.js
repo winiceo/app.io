@@ -3,10 +3,12 @@ module.exports = app => {
 
     const checkWechat = app.middlewares.checkwechat({}, app);
 
-    //const checkid = app.middlewares.checkid({}, app);
+    const checktoken = app.middlewares.checktoken({}, app);
     const checksession = app.middlewares.checksession({}, app);
     const xml = app.middlewares.xmlparser({}, app);
     const wechatPayment = app.middlewares.wechatpay({}, app);
+
+    require('./router/make')(app);
 
     // 处理微信主动通知的消息 appid 不为同公从号，暂未处理
     app.all('/wechat/:appid', checkWechat, 'wechat.wechat.wechat');
@@ -44,6 +46,10 @@ module.exports = app => {
 
      // app.get('/app/:id', 'wechat.wechat.index');
 
+    app.get('/cms/login', app.controller.cms.user.login);
+    app.get('/cms/', app.controller.cms.home.index);
+
+
     app.get('/home', app.controller.home.home.index);
 
     app.get('/test', app.controller.home.home.test);
@@ -60,20 +66,30 @@ module.exports = app => {
     app.post('/api/v1/user/register', 'user.user.register')
     app.all('/api/v1/user/logout', 'user.user.logout')
 
-    app.all('/api/v1/user/info', 'user.user.userinfo')
+    app.all('/api/v1/user/info',checktoken, 'user.user.userinfo')
+    app.post('/api/v1/user/resetpwd',checktoken, 'user.user.resetpwd')
 
+ 
 
     //后台活动api
-    app.get('/api/v1/activity/list', 'api.activity.list')
-    app.get('/api/v1/activity/get/:id', 'api.activity.get')
-    app.post('/api/v1/activity/save', 'api.activity.save')
+    app.get('/api/v1/activity/list',checktoken, 'api.activity.list')
+    app.get('/api/v1/activity/get/:id',checktoken, 'api.activity.get')
+    app.post('/api/v1/activity/save',checktoken, 'api.activity.save')
+    app.post('/api/v1/activity/delete/:id',checktoken, 'api.activity.destoryActivity')
+
+    //活动奖品
+    app.post('/api/v1/award/delete/:id',checktoken, 'api.activity.destroyAward')
 
     //后台核销
-    app.get('/api/v1/draw/list', 'api.draw.list')
+    app.get('/api/v1/draw/list', checktoken,'api.draw.list')
+    app.post('/api/v1/draw/check/:id', checktoken,'api.draw.check')
+    //前台核销
+    app.post('/api/v2/draw/check/:id','api.draw.checkFront')
 
     //核销管理员
-    app.get('/api/v1/check/list', 'api.check.list')
-    app.post('/api/v1/check/delete/:id', 'api.check.delete')
+    app.get('/api/v1/check/list', checktoken,'api.check.list')
+    app.post('/api/v1/check/delete/:id', checktoken,'api.check.delete')
+
 
     // app.get('/api/v1/activity/get/:id', 'api.activity.get')
     // app.post('/api/v1/activity/save', 'api.activity.save')
@@ -86,8 +102,15 @@ module.exports = app => {
     //我的奖品
     app.post('/lottery/user/awardresult', app.controller.page.lottery.awardresult);
     app.post('/lottery/getresult', app.controller.page.lottery.getresult);
-    app.post('/lottery/draw', app.controller.page.lottery.draw);
+    app.post('/lottery/draw/:id', app.controller.page.lottery.draw);
     app.post('/lottery/saveinfo', app.controller.page.lottery.saveinfo);
+
+    app.get('/draw/qrcode/:id', app.controller.page.qrcode.check);
+
+
+    //用户中心
+
+    app.get('/usercenter/index','usercenter.user.index')
 
     //
     // app.get('/client', app.controller.home.home.client);

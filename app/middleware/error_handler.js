@@ -12,7 +12,7 @@ module.exports = () => {
       this.app.logger.error(err);
             // 自定义错误时异常返回的格式
       this.body = {
-        success: false,
+        code: 11001,
         message: this.app.config.env === 'prod' ? '操作异常' : err.message,
       };
     }
