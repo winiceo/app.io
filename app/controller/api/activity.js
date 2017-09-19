@@ -152,6 +152,9 @@ module.exports = app => {
             ctx.body=ret;
         }
 
+
+         
+
         * destoryActivity(){
             const {ctx, service} = this;
             const pageid = ctx.params.id;

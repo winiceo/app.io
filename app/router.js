@@ -123,6 +123,14 @@ module.exports = app => {
     // app.get('/await/pager', app.controller.await.await.pager);
     //
      app.get('/about', app.controller.about.about.index);
+
+
+
+
+     //测试用非正式
+
+     //app.get('/api/v1/test/:id', 'api.activity.test')
+
     // app.get('/router', app.controller.router.router.index);
     // app.get('/dynamic', app.controller.dynamic.dynamic.index);
     // app.get('/app/api/article/list', app.controller.app.app.list);
